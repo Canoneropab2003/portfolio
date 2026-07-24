@@ -57,93 +57,12 @@
   }
   @media (max-width:860px){ .app{grid-template-columns:1fr;} }
 
-  /* ---------- NAV ---------- */
-  .nav{
-    background:var(--ink);
-    padding:26px 18px;
-    display:flex;flex-direction:column;gap:22px;
-    position:sticky;top:0;height:100vh;
-    transition:background .25s ease;
-  }
-  html[data-theme="dark"] .nav{background:#0A0F19;}
-  .nav-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-  .brand{font-weight:800;font-size:16.5px;display:flex;align-items:center;gap:8px;color:#fff;}
-  .brand .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 3px rgba(63,214,155,.22);}
-
-  .theme-toggle{
-    all:unset;cursor:pointer;
-    width:34px;height:34px;border-radius:9px;position:relative;
-    display:flex;align-items:center;justify-content:center;
-    background:rgba(255,255,255,.07);color:#DDE4F2;
-    transition:background .15s ease, transform .15s ease;
-  }
-  .theme-toggle:hover{background:rgba(255,255,255,.14);transform:scale(1.06);}
-  .theme-toggle svg{
-    width:17px;height:17px;position:absolute;top:50%;left:50%;
-    transform:translate(-50%,-50%) rotate(0deg);opacity:1;
-    transition:transform .45s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
-  }
-  .theme-toggle .sun{opacity:0;transform:translate(-50%,-50%) rotate(-90deg);}
-  html[data-theme="dark"] .theme-toggle .sun{opacity:1;transform:translate(-50%,-50%) rotate(0deg);}
-  html[data-theme="dark"] .theme-toggle .moon{opacity:0;transform:translate(-50%,-50%) rotate(90deg);}
-
-  .tabs{display:flex;flex-direction:column;gap:2px;position:relative;}
-  .tab-highlight{
-    position:absolute;top:0;left:0;z-index:0;pointer-events:none;opacity:0;
-    background:linear-gradient(135deg,var(--accent),#4C74EE);
-    border-radius:9px;
-    box-shadow:0 8px 18px rgba(47,93,224,.38);
-    transition:transform .32s cubic-bezier(.2,.7,.3,1), width .32s ease, height .32s ease, opacity .2s ease;
-  }
-  .tab-btn{
-    all:unset;cursor:pointer;box-sizing:border-box;position:relative;z-index:1;
-    display:flex;align-items:center;gap:12px;
-    padding:10px 12px;border-radius:9px;
-    font-size:13.5px;font-weight:500;
-    color:#A9B5CB;
-    transition:background .15s ease,color .15s ease,transform .15s ease;
-  }
-  .tab-btn .id{
-    font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:#7887A3;
-    border:1px solid rgba(255,255,255,.14);border-radius:5px;
-    padding:2px 5px;min-width:19px;text-align:center;flex-shrink:0;
-    transition:border-color .15s ease,color .15s ease;
-  }
-  .tab-btn:hover:not(.active){background:rgba(255,255,255,.06);color:#fff;transform:translateX(2px);}
-  .tab-btn.active{background:transparent;color:#fff;}
-  .tab-btn.active .id{color:#fff;border-color:rgba(255,255,255,.55);}
-
-  .nav-foot{margin-top:auto;font-size:12px;color:#8492AC;}
-  .nav-foot-divider{border-top:2px dashed rgba(255,255,255,.12);margin:0 0 16px;}
-  .nav-foot-status{margin-bottom:16px;}
-  .nav-foot-link{
-    display:flex;align-items:center;gap:9px;color:#D6DDEE;margin-bottom:9px;
-    font-size:12.3px;transition:color .15s ease,transform .15s ease;
-  }
-  .nav-foot-link:last-of-type{margin-bottom:12px;}
-  .nav-foot-link:hover{color:#fff;transform:translateX(2px);text-decoration:underline;}
-  .nav-foot-link svg{width:13px;height:13px;opacity:.6;flex-shrink:0;transition:opacity .15s ease;}
-  .nav-foot-link:hover svg{opacity:1;}
-  .nav-foot-loc{
-    font-size:11px;color:#7887A3;display:flex;align-items:center;gap:6px;
-    text-decoration:none;cursor:pointer;transition:color .15s ease,transform .15s ease;
-  }
-  .nav-foot-loc:hover{color:#D6DDEE;transform:translateX(2px);text-decoration:underline;}
-  .nav-foot-loc svg{width:12px;height:12px;opacity:.7;flex-shrink:0;}
-
-  /* mobile nav becomes a horizontal scroll strip */
-  @media (max-width:860px){
-    .nav{
-      position:sticky;top:0;height:auto;z-index:40;
-      flex-direction:row;align-items:center;gap:14px;
-      padding:12px 14px;overflow-x:auto;
-    }
-    .nav-top{gap:8px;}
-    .tabs{flex-direction:row;gap:6px;}
-    .tab-btn{padding:8px 12px;white-space:nowrap;}
-    .tab-btn:hover:not(.active){transform:none;}
-    .nav-foot{display:none;}
-  }
+  /* ---------- NAV ----------
+     Moved to nav.css — make sure it's linked in the HTML
+     AFTER this stylesheet, e.g.:
+     <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="nav.css">
+  */
 
   /* ---------- STAGE ---------- */
   .stage{
@@ -550,7 +469,6 @@
   /* gentle attention-holders on status indicators */
   .stamp.open .dot,
   .hero-photo-badge .dot,
-  .brand .dot,
   .chat-head .dot{
     animation:pulseDot 2.4s ease-in-out infinite;
   }
@@ -612,8 +530,6 @@
   /* micro-interactions */
   .btn{will-change:transform;}
   .btn:active{transform:translateY(0) scale(.96);}
-  .tab-btn{will-change:transform;}
-  .tab-btn:active{transform:scale(.97);}
   .card,.proj-card:not(.empty),.cert-row{will-change:transform;}
 
   #chat-fab{animation:popIn .5s cubic-bezier(.2,.7,.3,1) both;animation-delay:.4s;}

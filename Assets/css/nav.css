@@ -1,0 +1,406 @@
+/* ==========================================================
+   NAV — sidebar navigation
+   Depends on the CSS custom properties defined in style.css
+   (--ink, --accent, --ok, etc). Load this file AFTER style.css.
+
+   Default state = LIGHT, to match the ticket-card system used
+   across the rest of the site (white cards, mono TICKET labels,
+   blue accent, green "open" pill). The previous dark-navy look
+   now lives under html[data-theme="dark"] .nav so the toggle
+   still works — it just switches the right direction.
+
+   3D pass: real CSS 3D transforms (perspective + rotateX/Y +
+   translateZ), not flat tricks. One signature moment (the brand
+   mark) is genuinely playful; everything else is quieter
+   supporting motion. All of it respects prefers-reduced-motion.
+   ========================================================== */
+
+.nav{
+  background:#FFFFFF;
+  padding:26px 18px 20px;
+  display:flex;flex-direction:column;gap:22px;
+  position:sticky;top:0;height:100vh;
+  transition:background .25s ease, border-color .25s ease;
+  border-right:1px solid rgba(16,23,42,.08);
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(16,23,42,.14) transparent;
+}
+.nav::-webkit-scrollbar{width:5px;}
+.nav::-webkit-scrollbar-thumb{background:rgba(16,23,42,.14);border-radius:3px;}
+
+html[data-theme="dark"] .nav{
+  background:
+    radial-gradient(560px 320px at -10% -10%, rgba(110,140,242,.12), transparent 60%),
+    linear-gradient(180deg,#0A0F19 0%,#080B13 100%);
+  border-right-color:rgba(255,255,255,.06);
+}
+html[data-theme="dark"] .nav::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);}
+
+/* ---------- BRAND ---------- */
+.nav-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.brand{display:flex;align-items:center;gap:11px;min-width:0;}
+.brand-mark{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(150deg,var(--accent),#4C74EE 55%,#7C5CF2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Sora',sans-serif;font-weight:800;font-size:13.5px;color:#fff;
+  box-shadow:0 8px 18px rgba(47,93,224,.28), inset 0 1px 0 rgba(255,255,255,.25);
+  position:relative;
+  transform-style:preserve-3d;
+  animation:brandWobble 7s ease-in-out infinite;
+  will-change:transform;
+}
+.brand-mark:hover{
+  animation:brandSpin .8s cubic-bezier(.32,.08,.28,1) 1;
+}
+@keyframes brandWobble{
+  0%,100%{transform:perspective(500px) rotateX(0deg) rotateY(0deg);}
+  25%{transform:perspective(500px) rotateX(6deg) rotateY(-8deg);}
+  50%{transform:perspective(500px) rotateX(-4deg) rotateY(6deg);}
+  75%{transform:perspective(500px) rotateX(3deg) rotateY(-5deg);}
+}
+@keyframes brandSpin{
+  from{transform:perspective(500px) rotateY(0deg);}
+  to{transform:perspective(500px) rotateY(360deg);}
+}
+.brand-mark::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;
+  border:1px solid rgba(255,255,255,.22);pointer-events:none;
+}
+.brand-mark .dot{
+  position:absolute;top:-3px;right:-3px;width:10px;height:10px;border-radius:50%;
+  background:var(--ok);border:2.5px solid #FFFFFF;box-shadow:0 0 0 2px rgba(63,214,155,.2);
+  z-index:1;
+}
+html[data-theme="dark"] .brand-mark .dot{border-color:#0C1524;}
+.brand-text{display:flex;flex-direction:column;line-height:1.3;min-width:0;}
+.brand-text strong{
+  font-family:'Sora',sans-serif;font-weight:700;font-size:14.5px;color:#10172A;
+  letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.brand-text span{
+  font-size:10px;color:#97A1BE;letter-spacing:.05em;font-family:'IBM Plex Mono',monospace;
+}
+html[data-theme="dark"] .brand-text strong{color:#fff;}
+html[data-theme="dark"] .brand-text span{color:#7887A3;}
+
+.theme-toggle{
+  all:unset;cursor:pointer;
+  width:34px;height:34px;border-radius:10px;position:relative;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(16,23,42,.045);color:#47506B;
+  border:1px solid rgba(16,23,42,.08);
+  transition:background .15s ease, transform .15s ease, border-color .15s ease, color .15s ease;
+}
+.theme-toggle:hover{background:rgba(16,23,42,.08);transform:scale(1.06);border-color:rgba(16,23,42,.14);}
+html[data-theme="dark"] .theme-toggle{
+  background:rgba(255,255,255,.055);color:#DDE4F2;border-color:rgba(255,255,255,.09);
+}
+html[data-theme="dark"] .theme-toggle:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.18);}
+.theme-toggle svg{
+  width:16.5px;height:16.5px;position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%) rotate(0deg);opacity:1;
+  transition:transform .45s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
+}
+.theme-toggle .sun{opacity:0;transform:translate(-50%,-50%) rotate(-90deg);}
+html[data-theme="dark"] .theme-toggle .sun{opacity:1;transform:translate(-50%,-50%) rotate(0deg);}
+html[data-theme="dark"] .theme-toggle .moon{opacity:0;transform:translate(-50%,-50%) rotate(90deg);}
+
+.nav-top-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* Pure-CSS toggle — a hidden checkbox is the single source of truth
+   for open/closed. No JavaScript is required for this to work.
+   It must be placed as the FIRST child of <nav class="nav"> in the
+   HTML so the sibling selectors below (~) can reach both the label
+   (inside .nav-top) and the .nav-panel later in the markup. */
+.nav-toggle-checkbox{
+  position:absolute;opacity:0;width:0;height:0;pointer-events:none;
+}
+
+/* Hamburger toggle — hidden on desktop, shown on mobile + tablet only.
+   Styled as a solid dark rounded square with light bars (matches the
+   reference icon), independent of the light/dark site theme so it
+   reads consistently either way. It's a <label for="nav-toggle-checkbox">,
+   so clicking/tapping it toggles the checkbox natively — no click
+   handler needed. */
+.nav-toggle{
+  all:unset;cursor:pointer;
+  display:none;
+  width:42px;height:42px;border-radius:13px;position:relative;flex-shrink:0;
+  align-items:center;justify-content:center;
+  background:#2E2E33;
+  box-shadow:0 6px 16px rgba(16,23,42,.22), inset 0 1px 0 rgba(255,255,255,.06);
+  transition:background .15s ease, transform .15s ease;
+}
+.nav-toggle:hover{background:#3A3A41;transform:scale(1.04);}
+.nav-toggle:active{transform:scale(.95);}
+html[data-theme="dark"] .nav-toggle{
+  background:#3A3A41;box-shadow:0 6px 16px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.08);
+}
+html[data-theme="dark"] .nav-toggle:hover{background:#46464E;}
+.nav-toggle .bar{
+  position:absolute;left:50%;width:20px;height:3px;border-radius:3px;
+  background:#E7E7EA;transform:translateX(-50%);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), opacity .2s ease, top .3s ease;
+}
+.nav-toggle .bar:nth-child(1){top:14px;}
+.nav-toggle .bar:nth-child(2){top:20px;}
+.nav-toggle .bar:nth-child(3){top:26px;}
+.nav-toggle-checkbox:checked ~ .nav-top .nav-toggle .bar:nth-child(1){top:20px;transform:translateX(-50%) rotate(45deg);}
+.nav-toggle-checkbox:checked ~ .nav-top .nav-toggle .bar:nth-child(2){opacity:0;transform:translateX(-50%) scaleX(0);}
+.nav-toggle-checkbox:checked ~ .nav-top .nav-toggle .bar:nth-child(3){top:20px;transform:translateX(-50%) rotate(-45deg);}
+
+.nav-top-divider{border-top:1.5px dashed rgba(16,23,42,.14);}
+html[data-theme="dark"] .nav-top-divider{border-top-color:rgba(255,255,255,.07);border-top-style:solid;}
+
+/* Panel wrapper around .tabs + .nav-foot. On desktop it's invisible
+   (display:contents means its children just act like direct flex
+   items of .nav, so nothing about the current layout changes).
+   On mobile it becomes the actual dropdown surface — see media
+   query below. This wrapper is written directly in the HTML now
+   (see nav.html below), so the toggle works even without JS. */
+.nav-panel{display:contents;}
+
+/* ---------- TABS ---------- */
+.tabs{display:flex;flex-direction:column;gap:14px;position:relative;flex:1;}
+.tab-group{
+  display:flex;flex-direction:column;gap:2px;position:relative;
+  transform-origin:top center;
+  animation:tabGroupIn .6s cubic-bezier(.22,.85,.32,1) backwards;
+}
+.tab-group:nth-child(1){animation-delay:.04s;}
+.tab-group:nth-child(2){animation-delay:.13s;}
+.tab-group:nth-child(3){animation-delay:.22s;}
+.tab-group:nth-child(4){animation-delay:.31s;}
+.tab-group:nth-child(5){animation-delay:.40s;}
+.tab-group:nth-child(6){animation-delay:.49s;}
+@keyframes tabGroupIn{
+  from{transform:perspective(700px) rotateX(-65deg);opacity:0;}
+  to{transform:perspective(700px) rotateX(0deg);opacity:1;}
+}
+.tab-group-label{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
+  color:#9099B8;letter-spacing:.1em;text-transform:uppercase;
+  padding:0 10px 6px;
+}
+html[data-theme="dark"] .tab-group-label{color:#586A8C;}
+/* Disabled: this element is positioned by a separate script (not
+   nav.css/nav.js) that's landing it at its default top:0/left:0
+   instead of under the active tab — visible as a stray blue sliver
+   over the group label. .tab-btn.active now colors itself directly
+   (see above), so this floating highlight is redundant; hiding it
+   removes the glitch without needing to touch that other script. */
+.tab-highlight{display:none !important;}
+.tab-btn{
+  all:unset;cursor:pointer;box-sizing:border-box;position:relative;z-index:1;
+  display:flex;align-items:center;gap:10px;width:100%;
+  padding:8px 10px;border-radius:11px;
+  font-size:13.2px;font-weight:500;
+  color:#5B6480;
+  transition:background .15s ease,color .15s ease,transform .15s ease;
+}
+.tab-btn .icon-chip{
+  width:26px;height:26px;border-radius:8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(16,23,42,.045);
+  transition:background .15s ease, box-shadow .15s ease, transform .5s cubic-bezier(.3,.1,.3,1);
+}
+.tab-btn svg{width:14.5px;height:14.5px;flex-shrink:0;opacity:.8;transition:opacity .15s ease;}
+.tab-btn .label{flex:1;text-align:left;}
+.tab-btn .id{
+  font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:#A6AEC7;
+  flex-shrink:0;
+}
+.tab-btn:hover:not(.active){background:rgba(16,23,42,.045);color:#10172A;transform:translateX(2px);}
+.tab-btn:hover:not(.active) svg{opacity:1;}
+.tab-btn:hover:not(.active) .icon-chip{
+  background:rgba(16,23,42,.08);
+  transform:perspective(300px) rotateY(360deg);
+}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--accent),#4C74EE);
+  color:#fff;
+  box-shadow:0 10px 22px rgba(47,93,224,.3);
+}
+html[data-theme="dark"] .tab-btn.active{box-shadow:0 8px 20px rgba(47,93,224,.4);}
+.tab-btn.active svg{opacity:1;}
+.tab-btn.active .icon-chip{
+  background:rgba(255,255,255,.22);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.28);
+  transform:perspective(400px) translateZ(14px);
+}
+.tab-btn .id{color:rgba(255,255,255,.75);}
+.tab-btn.active .id{color:rgba(255,255,255,.75);}
+.tab-btn:active{transform:scale(.97);}
+.tab-btn{will-change:transform;}
+
+html[data-theme="dark"] .tab-btn{color:#9AA6C0;}
+html[data-theme="dark"] .tab-btn .icon-chip{background:rgba(255,255,255,.05);}
+html[data-theme="dark"] .tab-btn .id{color:#57638A;}
+html[data-theme="dark"] .tab-btn:hover:not(.active){background:rgba(255,255,255,.05);color:#fff;}
+html[data-theme="dark"] .tab-btn:hover:not(.active) .icon-chip{background:rgba(255,255,255,.09);}
+html[data-theme="dark"] .tab-btn.active .icon-chip{
+  background:rgba(255,255,255,.16);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);
+}
+
+/* ---------- FOOTER ---------- */
+.nav-foot{margin-top:auto;font-size:12px;color:#6B7590;display:flex;flex-direction:column;gap:14px;}
+.nav-foot-divider{border-top:1.5px dashed rgba(16,23,42,.14);}
+html[data-theme="dark"] .nav-foot{color:#8492AC;}
+html[data-theme="dark"] .nav-foot-divider{border-top-color:rgba(255,255,255,.07);border-top-style:solid;}
+
+.nav-foot-status{
+  display:flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg, rgba(34,197,94,.10), rgba(34,197,94,.03));
+  border:1px solid rgba(34,197,94,.3);
+  border-radius:999px;padding:10px 12px;
+}
+.nav-foot-status .stamp{
+  all:unset;
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(34,197,94,.14);
+  position:relative;
+}
+.nav-foot-status .stamp .dot{
+  width:7px;height:7px;border-radius:50%;background:var(--ok);
+}
+.nav-foot-status-text{display:flex;flex-direction:column;line-height:1.3;}
+.nav-foot-status-text strong{font-size:12px;font-weight:700;color:#178A53;}
+.nav-foot-status-text span{font-size:10.5px;color:#6E9A81;}
+html[data-theme="dark"] .nav-foot-status{
+  background:linear-gradient(135deg, rgba(63,214,155,.12), rgba(63,214,155,.04));
+  border-color:rgba(63,214,155,.28);
+}
+html[data-theme="dark"] .nav-foot-status .stamp{background:rgba(63,214,155,.18);}
+html[data-theme="dark"] .nav-foot-status-text strong{color:#5FE3AC;}
+html[data-theme="dark"] .nav-foot-status-text span{color:#7CA697;}
+
+.nav-foot-card{
+  background:rgba(16,23,42,.03);
+  border:1px solid rgba(16,23,42,.07);
+  border-radius:13px;padding:6px;display:flex;flex-direction:column;gap:1px;
+}
+.nav-foot-link{
+  display:flex;align-items:center;gap:10px;color:#3A4360;
+  font-size:12.2px;padding:7px 8px;border-radius:9px;
+  transition:background .15s ease,color .15s ease,transform .2s ease;
+}
+.nav-foot-link .icon-chip{
+  width:24px;height:24px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(16,23,42,.045);
+  transition:background .15s ease;
+}
+.nav-foot-link:hover{
+  background:rgba(16,23,42,.05);color:#10172A;text-decoration:none;
+  transform:perspective(400px) rotateX(-8deg) translateY(-1px);
+}
+.nav-foot-link:hover .icon-chip{background:var(--accent);}
+.nav-foot-link svg{width:13px;height:13px;opacity:.75;flex-shrink:0;transition:opacity .15s ease;}
+.nav-foot-link:hover svg{opacity:1;}
+.nav-foot-link .text{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+html[data-theme="dark"] .nav-foot-card{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.07);}
+html[data-theme="dark"] .nav-foot-link{color:#D6DDEE;}
+html[data-theme="dark"] .nav-foot-link .icon-chip{background:rgba(255,255,255,.055);}
+html[data-theme="dark"] .nav-foot-link:hover{background:rgba(255,255,255,.055);color:#fff;}
+
+.nav-foot-loc{
+  font-size:11px;color:#8A93B0;display:flex;align-items:center;gap:10px;
+  text-decoration:none;cursor:pointer;padding:7px 8px;border-radius:9px;
+  transition:background .15s ease,color .15s ease,transform .2s ease;
+}
+.nav-foot-loc .icon-chip{
+  width:24px;height:24px;border-radius:7px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(16,23,42,.045);
+  transition:background .15s ease;
+}
+.nav-foot-loc:hover{
+  background:rgba(16,23,42,.05);color:#3A4360;text-decoration:none;
+  transform:perspective(400px) rotateX(-6deg) translateY(-1px);
+}
+.nav-foot-loc:hover .icon-chip{background:rgba(16,23,42,.09);}
+.nav-foot-loc svg{width:13px;height:13px;opacity:.65;flex-shrink:0;}
+
+html[data-theme="dark"] .nav-foot-loc{color:#7887A3;}
+html[data-theme="dark"] .nav-foot-loc .icon-chip{background:rgba(255,255,255,.055);}
+html[data-theme="dark"] .nav-foot-loc:hover{background:rgba(255,255,255,.055);color:#D6DDEE;}
+html[data-theme="dark"] .nav-foot-loc:hover .icon-chip{background:rgba(255,255,255,.12);}
+
+/* status dot pulse */
+@keyframes navPulseDot{
+  0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.35);}
+  50%{box-shadow:0 0 0 6px rgba(34,197,94,0);}
+}
+.nav-foot-status .stamp .dot,
+.brand-mark .dot{
+  animation:navPulseDot 2.4s ease-in-out infinite;
+}
+
+/* mobile + tablet: nav becomes a slim bar + hamburger-triggered dropdown panel.
+   Desktop (>1024px) is untouched — full sidebar as before. */
+@media (max-width:1024px){
+  .nav{
+    position:sticky;top:0;height:auto;z-index:40;
+    flex-direction:row;align-items:center;
+    padding:12px 14px;overflow:visible;
+    border-right:none;border-bottom:1px solid rgba(16,23,42,.08);
+  }
+  html[data-theme="dark"] .nav{border-bottom-color:rgba(255,255,255,.06);}
+  .nav-top{flex:1;gap:8px;}
+  .nav-top-divider{display:none;}
+
+  .nav-toggle{display:flex;}
+
+  /* the dropdown surface itself */
+  .nav-panel{
+    display:flex;flex-direction:column;gap:16px;
+    position:absolute;top:100%;left:0;right:0;
+    background:#FFFFFF;
+    padding:16px 14px 18px;
+    border-bottom:1px solid rgba(16,23,42,.08);
+    box-shadow:0 20px 34px -14px rgba(16,23,42,.22);
+    transform-origin:top center;
+    transform:perspective(800px) rotateX(-80deg);
+    opacity:0;pointer-events:none;
+    max-height:0;overflow:hidden;
+    transition:transform .4s cubic-bezier(.22,.85,.32,1), opacity .3s ease, max-height .4s ease;
+  }
+  html[data-theme="dark"] .nav-panel{
+    background:#0A0F19;border-bottom-color:rgba(255,255,255,.07);
+  }
+  .nav-toggle-checkbox:checked ~ .nav-panel{
+    transform:perspective(800px) rotateX(0deg);
+    opacity:1;pointer-events:auto;
+    max-height:calc(100vh - 64px);
+    overflow-y:auto;
+  }
+
+  .tabs{flex-direction:column;gap:14px;flex:none;}
+  .tab-group{flex-direction:column;gap:2px;animation:none;}
+  .tab-group-label{display:block;}
+  .tab-btn{padding:9px 10px;white-space:normal;width:100%;}
+  .tab-btn:hover:not(.active){transform:none;}
+
+  .nav-foot{display:flex;margin-top:0;}
+}
+
+/* ---------- MOTION SAFETY ---------- */
+@media (prefers-reduced-motion: reduce){
+  .brand-mark{animation:none;}
+  .brand-mark:hover{animation:none;}
+  .tab-group{animation:none;opacity:1;transform:none;}
+  .tab-btn:hover:not(.active) .icon-chip{transform:none;}
+  .tab-btn.active .icon-chip{transform:none;}
+  .nav-foot-link:hover{transform:none;}
+  .nav-foot-loc:hover{transform:none;}
+  .nav-foot-status .stamp .dot,
+  .brand-mark .dot{animation:none;}
+  .nav-panel{transition:opacity .15s ease;transform:none;}
+  .nav-toggle-checkbox:checked ~ .nav-panel{transform:none;}
+  .nav-toggle .bar{transition:opacity .15s ease;}
+}
