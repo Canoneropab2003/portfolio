@@ -1,0 +1,15 @@
+/* ============================
+   reCAPTCHA wrapper spacing
+   ============================ */
+.recaptcha-wrap {
+  margin: 16px 0 18px;
+}
+
+/* ============================
+   Send button disabled state
+   ============================ */
+.btn.primary.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}

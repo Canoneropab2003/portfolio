@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pablito D. Cañonero Jr. Portfolio</title>
+<meta name="description" content="Pablito D. Cañonero Jr. — BS Computer Engineering graduate (University of Bohol, 2026). Web development, IoT & embedded systems, and technical support.">
+
+<!-- Open Graph (Facebook, Messenger, Discord, LinkedIn, WhatsApp, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Pablito D. Cañonero Jr. — Portfolio">
+<meta property="og:title" content="Pablito D. Cañonero Jr. | Computer Engineer — Web Dev, IoT & Technical Support">
+<meta property="og:description" content="BS Computer Engineering graduate (University of Bohol, 2026). Building web apps and IoT-driven systems, and just as comfortable on technical support. Open to work.">
+<meta property="og:image" content="https://canonero4821-sudo.github.io/Portfolio/Assets/Image/IMG_7022.JPG">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="1200">
+<meta property="og:url" content="https://canonero4821-sudo.github.io/Portfolio/">
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pablito D. Cañonero Jr. | Computer Engineer">
+<meta name="twitter:description" content="BS Computer Engineering graduate (University of Bohol, 2026). Web dev, IoT & embedded systems, technical support. Open to work.">
+<meta name="twitter:image" content="https://canonero4821-sudo.github.io/Portfolio/Assets/Image/IMG_7022.JPG">
+<link rel="icon" type="image/png" href="Assets/Image/CAÑONERO PABLITO JR BSCOMPE2.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-icons-font@v16/font/simple-icons.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="Assets/css/style.css">
+<link rel="stylesheet" href="Assets/css/loading.css">
+<link rel="stylesheet" href="Assets/css/about.css">
+<link rel="stylesheet" href="Assets/css/education.css">
+<link rel="stylesheet" href="Assets/css/skills.css">
+<link rel="stylesheet" href="Assets/css/experiences.css">
+<link rel="stylesheet" href="Assets/css/cert-styles.css">
+<link rel="stylesheet" href="Assets/css/contact.css">
+</head>
+<body>
+
+<div class="app">
+  <nav class="nav">
+    <div class="nav-top">
+      <div class="brand"><span class="dot"></span>PABLITO.DEV</div>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+    </div>
+    <div class="tabs" id="tabs">
+      <button class="tab-btn active" data-target="top"><span class="id">01</span>Top</button>
+      <button class="tab-btn" data-target="about"><span class="id">02</span>About Me</button>
+      <button class="tab-btn" data-target="education"><span class="id">03</span>Education</button>
+      <button class="tab-btn" data-target="services"><span class="id">04</span>My Services</button>
+      <button class="tab-btn" data-target="skills"><span class="id">05</span>Skills</button>
+      <button class="tab-btn" data-target="experience"><span class="id">06</span>Experiences</button>
+      <button class="tab-btn" data-target="certifications"><span class="id">07</span>Certifications</button>
+      <button class="tab-btn" data-target="projects"><span class="id">08</span>Projects</button>
+      <button class="tab-btn" data-target="resume"><span class="id">09</span>Resume</button>
+      <button class="tab-btn" data-target="contact"><span class="id">10</span>Contact</button>
+    </div>
+    <div class="nav-foot">
+      <div class="nav-foot-divider"></div>
+      <div class="nav-foot-status">
+        <span class="stamp open" style="transform:none;"><span class="dot"></span>Open to work</span>
+      </div>
+      <a class="nav-foot-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=canonero4821@gmail.com" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m4 6 8 7 8-7"/></svg>
+        canonero4821@gmail.com
+      </a>
+      <a class="nav-foot-link" href="tel:+639524808855">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92Z"/></svg>
+        +63 952 480 8855
+      </a>
+      <a href="#" class="nav-foot-loc" onclick="openInMaps(event)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        Sagbayan, Bohol, PH
+      </a>
+    </div>
+  </nav>
+
+  <div class="stage">
+
+    <section class="ticket active" id="top">
+      <div class="stub-head">
+        <div>
+          <div class="num">TICKET #0001</div>
+          <h2>Top</h2>
+        </div>
+        <span class="stamp open"><span class="dot"></span>OPEN TO WORK</span>
+      </div>
+      <div class="stub-body">
+        <div class="hero-flex">
+          <div class="hero-text">
+            <div class="hero-role">COMPUTER ENGINEER WEB DEVELOPMENT &amp; TECHNICAL SUPPORT</div>
+            <h1 class="hero-name">Pablito D. Cañonero Jr.</h1>
+            <p class="lede">BS Computer Engineering graduate from the University of Bohol, building
+            web applications and IoT-driven systems and just as comfortable on the
+            support side, helping people actually use the tech that gets built.</p>
+            <div class="cta-row">
+              <button class="btn primary" onclick="showTab('contact')">Get in touch</button>
+              <button class="btn ghost" onclick="showTab('projects')">View projects</button>
+            </div>
+          </div>
+          <div class="hero-photo-wrap" id="hero-photo-trigger" role="button" tabindex="0" aria-label="View larger photo">
+            <div class="hero-photo-frame" id="hero-photo-frame">
+              <img class="hero-photo" src="Assets/Image/IMG_7022.JPG" alt="Pablito D. Cañonero Jr." onerror="this.onerror=null;this.replaceWith(Object.assign(document.createElement('div'),{className:'hero-photo hero-photo-fallback',textContent:'PC'}));">
+              <div class="hero-photo-zoom">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M11 8v6M8 11h6"/></svg>
+              </div>
+            </div>
+            <span class="hero-photo-badge"><span class="dot"></span>OPEN TO WORK</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="about">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0002</div><h2>About Me</h2></div>
+        <span class="stamp open"><span class="dot"></span>OPEN</span>
+      </div>
+      <div class="stub-body">
+        <div class="about-grid">
+          <div class="about-main">
+            <p class="lede">I'm a Computer Engineering graduate from the University of Bohol (2026),
+            with hands-on experience spanning IoT-based systems, web applications, and classroom
+            automation. My thesis, <strong>KlasEco</strong>, paired custom software with
+            microcontrollers to automate real classroom equipment it placed
+            <span class="highlight">2nd at Create@UB 2026</span>, which was the first real test of
+            whether an idea on paper still held up once it had to run in front of judges.</p>
+
+            <p class="lede">Before that, I did my OJT at <strong>BukoLabs.io</strong>, working on a
+            project called <strong>HapsayHub</strong>. That's where most of my web development habits
+            actually came from less classroom theory, more building something a team could use day
+            to day. Between the thesis and the OJT, I ended up with a fairly even mix of hardware and
+            software experience, backed by a handful of certifications along the way.</p>
+
+            <p class="lede">On top of that, I've spent real time in customer-facing and administrative
+            work clear communication, accurate data entry, and the patience to work through a
+            problem methodically instead of guessing. That combination is what I'm looking to put to
+            use next: development, IT support, systems or QA work, or anything computer-related where
+            being able to both build the thing and explain it to someone else actually matters. Outside
+            of work, I spend a fair amount of time on photography and design, which is probably obvious
+            from how much attention this page gets.</p>
+
+            <div class="about-tags">
+              <span class="about-tag" style="--tag-color:#6366F1">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>
+                </svg>
+                Software Development
+              </span>
+
+              <span class="about-tag" style="--tag-color:#F97316">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/>
+                  <path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>
+                </svg>
+                Hardware Development
+              </span>
+
+              <span class="about-tag" style="--tag-color:#10B981">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="2"/>
+                  <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+                </svg>
+                IoT
+              </span>
+
+              <span class="about-tag" style="--tag-color:#3B82F6">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="6" y="6" width="12" height="12" rx="1"/>
+                  <path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"/>
+                  <path d="M9 12h6"/>
+                </svg>
+                Microcontrollers
+              </span>
+
+              <span class="about-tag" style="--tag-color:#06B6D4">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10"/><path d="M2 12h20"/>
+                  <path d="M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20Z"/>
+                </svg>
+                Web Apps
+              </span>
+
+              <span class="about-tag" style="--tag-color:#EF4444">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 20a8 8 0 1 0-8-8"/><path d="M12 20v2M12 8v4l3 2"/>
+                  <path d="M2 12h2"/>
+                </svg>
+                Technical Support
+              </span>
+
+              <span class="about-tag" style="--tag-color:#8B5CF6">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08A3 3 0 0 1 3 13.16V6.5A2.5 2.5 0 0 1 5.5 4a2.5 2.5 0 0 1 4-2Z"/>
+                  <path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08A3 3 0 0 0 21 13.16V6.5A2.5 2.5 0 0 0 18.5 4a2.5 2.5 0 0 0-4-2Z"/>
+                </svg>
+                Problem Solving
+              </span>
+            </div>
+          </div>
+          <aside class="about-side">
+            <figure class="about-photo">
+              <div class="about-photo-frame">
+                <img src="Assets/Image/graduation.jpg" alt="Pablito D. Cañonero Jr. at his BS Computer Engineering graduation">
+                <div class="about-photo-caption">Graduation Day · University of Bohol, 2026</div>
+              </div>
+            </figure>
+            <div class="about-facts">
+              <div class="about-fact">
+                <span class="about-fact-label">Education</span>
+                <div class="about-fact-value">
+                  <strong>BS Computer Engineering</strong>
+                  <span class="about-fact-sub">University of Bohol · 2026</span>
+                </div>
+              </div>
+              <div class="about-fact">
+                <span class="about-fact-label">Focus</span>
+                <div class="about-fact-focus">
+                  <span>Software Dev</span>
+                  <span>Hardware Dev</span>
+                  <span>IoT</span>
+                  <span>Web Apps</span>
+                  <span>IT Support</span>
+                </div>
+              </div>
+              <div class="about-fact">
+                <span class="about-fact-label">Highlight</span>
+                <div class="about-fact-value">
+                  <strong>2nd Place</strong>
+                  <span class="about-fact-sub">Create@UB 2026</span>
+                </div>
+              </div>
+              <div class="about-fact is-status">
+                <span class="about-fact-label">Status</span>
+                <span class="about-fact-value">Open to work</span>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <div class="about-stats">
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/>
+              </svg>
+            </div>
+            <span class="stat-num">15</span>
+            <span class="stat-label">Projects Built</span>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+              </svg>
+            </div>
+            <span class="stat-num">50</span>
+            <span class="stat-label">Achievements &amp; Certs</span>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+              </svg>
+            </div>
+            <span class="stat-num">4</span>
+            <span class="stat-label">Years Experience</span>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/><path d="M12 19v3"/><path d="M8 22h8"/>
+              </svg>
+            </div>
+            <span class="stat-num">4</span>
+            <span class="stat-label">Speaking Engagements</span>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/>
+              </svg>
+            </div>
+            <span class="stat-num">7</span>
+            <span class="stat-label">Tech Stacks Mastered</span>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/>
+                <path d="M7 5H4a2 2 0 0 0 2 2h1M17 5h3a2 2 0 0 1-2 2h-1"/>
+              </svg>
+            </div>
+            <span class="stat-num">3</span>
+            <span class="stat-label">Competitions Joined</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="education">
+      <div class="stub-head">
+        <div>
+          <div class="num">TICKET #0003</div>
+          <h2>Background Education</h2>
+        </div>
+        <span class="stamp completed">
+          <span class="dot"></span>COMPLETED
+        </span>
+      </div>
+      <div class="stub-body">
+        <div class="timeline">
+          
+          <!-- College -->
+          <div class="t-item">
+            <span class="when">2022 – 2026</span>
+            <h3>University of Bohol</h3>
+            <div class="role">Tertiary · Bachelor of Science in Computer Engineering</div>
+            
+            <p>
+              Dr. Cecilio Putong Street, Cogon, Tagbilaran City, Bohol, 6300 Philippines<br>
+              <strong>Tertiary Diploma achieved:</strong> June 2026
+            </p>
+            
+            <div class="social-links-container">
+              <a href="https://universityofbohol.edu.ph" target="_blank" rel="noopener noreferrer" class="link-item link-website" title="Website">
+                <img src="Assets/Image/Copy%20of%20UB%20Seal%20Official.png" alt="UB Logo" class="custom-logo">
+                <span>Website</span>
+              </a>
+              <a href="https://www.facebook.com/universityofboholofficialfbpage/" target="_blank" rel="noopener noreferrer" class="link-item link-facebook" title="Facebook">
+                <i class="fab fa-facebook link-icon"></i>
+                <span>Facebook</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Senior High School -->
+          <div class="t-item">
+            <span class="when">2020 – 2022</span>
+            <h3>JAPeR Memorial High School</h3>
+            <div class="role">Senior High School · GAS (General Academic Strand)</div>
+            
+            <p>
+              Sta. Catalina, Sagbayan, Bohol 6331, Philippines<br>
+              <strong>High School Diploma achieved:</strong> August 2022
+            </p>
+            
+            <div class="social-links-container">
+              <a href="404.html" target="_blank" class="link-item link-website" title="Website">
+                <i class="fas fa-globe link-icon"></i>
+                <span>Website</span>
+              </a>
+              <a href="https://www.facebook.com/japermhs" target="_blank" rel="noopener noreferrer" class="link-item link-facebook" title="Facebook">
+                <i class="fab fa-facebook link-icon"></i>
+                <span>Facebook</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Junior High School -->
+          <div class="t-item">
+            <span class="when">2016 – 2020</span>
+            <h3>JAPeR Memorial High School</h3>
+            <div class="role">Junior High School</div>
+            
+            <p>
+              Sta. Catalina, Sagbayan, Bohol 6331, Philippines
+            </p>
+            
+            <div class="social-links-container">
+              <a href="404.html" target="_blank" class="link-item link-website" title="Website">
+                <i class="fas fa-globe link-icon"></i>
+                <span>Website</span>
+              </a>
+              <a href="https://www.facebook.com/japermhs" target="_blank" class="link-item link-facebook" title="Facebook">
+                <i class="fab fa-facebook link-icon"></i>
+                <span>Facebook</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Elementary -->
+          <div class="t-item">
+            <span class="when">2010 – 2016</span>
+            <h3>Santa Catalina Elementary School</h3>
+            <div class="role">Elementary Education</div>
+            
+            <p>
+              Sta. Catalina, Sagbayan, Bohol 6331, Philippines<br>
+              <strong>Elementary Diploma achieved:</strong> 2016
+            </p>
+            
+            <div class="social-links-container">
+              <a href="404.html" target="_blank" class="link-item link-website" title="Website">
+                <i class="fas fa-globe link-icon"></i>
+                <span>Website</span>
+              </a>
+              <a href="404.html" target="_blank" class="link-item link-facebook" title="Facebook">
+                <i class="fab fa-facebook link-icon"></i>
+                <span>Facebook</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    
+    <section class="ticket" id="services">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0004</div><h2>My Services</h2></div>
+        <span class="stamp open"><span class="dot"></span>OPEN</span>
+      </div>
+      <div class="stub-body">
+        <div class="grid3">
+          <div class="card">
+            <span class="num">01</span>
+            <h3>Technical &amp; Customer Support</h3>
+            <p>Clear, patient troubleshooting and communication handling tickets,
+            documentation, and day-to-day tech questions.</p>
+          </div>
+          <div class="card">
+            <span class="num">02</span>
+            <h3>Web &amp; Software Development</h3>
+            <p>Building web applications end to end from database design to a
+            working, user-friendly front end.</p>
+          </div>
+          <div class="card">
+            <span class="num">03</span>
+            <h3>IoT &amp; Embedded Prototyping</h3>
+            <p>Connecting software to real hardware sensors, microcontrollers,
+            and automation, as in the KlasEco system.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="skills">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0005</div><h2>Skills</h2></div>
+        <span class="stamp open"><span class="dot"></span>OPEN</span>
+      </div>
+      <div class="stub-body">
+        <div class="skill-groups">
+
+          <div class="skill-group">
+            <h4>Programming</h4>
+            <div class="tag-row">
+              <span class="tag"><i class="devicon-c-plain colored"></i>C</span>
+              <span class="tag"><i class="devicon-cplusplus-plain colored"></i>C++</span>
+              <span class="tag"><i class="devicon-java-plain colored"></i>Java</span>
+              <span class="tag"><i class="devicon-csharp-plain colored"></i>C#</span>
+              <span class="tag"><i class="devicon-python-plain colored"></i>Python</span>
+              <span class="tag"><i class="devicon-javascript-plain colored"></i>JavaScript</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h4>Web &amp; Systems</h4>
+            <div class="tag-row">
+              <span class="tag"><i class="devicon-html5-plain colored"></i>HTML</span>
+              <span class="tag"><i class="devicon-css3-plain colored"></i>CSS</span>
+              <span class="tag"><i class="fa-solid fa-microchip icon-iot"></i>IoT &amp; Embedded Systems</span>
+              <span class="tag"><i class="fa-solid fa-code icon-software"></i>Software Fundamentals</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h4>Administrative</h4>
+            <div class="tag-row">
+              <span class="tag"><i class="fa-solid fa-desktop icon-literacy"></i>Computer &amp; Internet Literacy</span>
+              <span class="tag"><i class="fa-solid fa-keyboard icon-data"></i>Accurate Data Entry</span>
+              <span class="tag"><i class="fa-solid fa-clock icon-time"></i>Time Management</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h4>Interpersonal</h4>
+            <div class="tag-row">
+              <span class="tag"><i class="fa-solid fa-puzzle-piece icon-problem"></i>Problem Solving</span>
+              <span class="tag"><i class="fa-solid fa-people-group icon-team"></i>Team Collaboration</span>
+              <span class="tag"><i class="fa-solid fa-comments icon-comm"></i>Strong Communication</span>
+            </div>
+          </div>
+
+          <div class="skill-group">
+            <h4>Tools &amp; Technologies</h4>
+            <div class="tag-row tag-row--tight">
+              <span class="tag"><i class="devicon-laravel-plain colored"></i>Laravel</span>
+              <span class="tag"><i class="devicon-php-plain colored"></i>PHP</span>
+              <span class="tag"><i class="devicon-figma-plain colored"></i>Figma</span>
+              <span class="tag">
+                <svg class="tag-icon-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" id="canva">
+                  <g clip-path="url(#clip0_905_1790)">
+                    <path fill="#7D2AE7" d="M40 80C62.0914 80 80 62.0914 80 40C80 17.9086 62.0914 0 40 0C17.9086 0 0 17.9086 0 40C0 62.0914 17.9086 80 40 80Z"></path>
+                    <path fill="url(#paint0_radial_905_1790)" d="M40 80C62.0914 80 80 62.0914 80 40C80 17.9086 62.0914 0 40 0C17.9086 0 0 17.9086 0 40C0 62.0914 17.9086 80 40 80Z"></path>
+                    <path fill="url(#paint1_radial_905_1790)" d="M40 80C62.0914 80 80 62.0914 80 40C80 17.9086 62.0914 0 40 0C17.9086 0 0 17.9086 0 40C0 62.0914 17.9086 80 40 80Z"></path>
+                    <path fill="url(#paint2_radial_905_1790)" d="M40 80C62.0914 80 80 62.0914 80 40C80 17.9086 62.0914 0 40 0C17.9086 0 0 17.9086 0 40C0 62.0914 17.9086 80 40 80Z"></path>
+                    <path fill="url(#paint3_radial_905_1790)" d="M40 80C62.0914 80 80 62.0914 80 40C80 17.9086 62.0914 0 40 0C17.9086 0 0 17.9086 0 40C0 62.0914 17.9086 80 40 80Z"></path>
+                    <path fill="#fff" d="M57.2691 48.2052C56.939 48.2052 56.6485 48.484 56.3462 49.0928C52.9323 56.0153 47.0358 60.9134 40.2125 60.9134C32.3228 60.9134 27.437 53.7913 27.437 43.9522C27.437 27.2855 36.7232 17.6491 44.8796 17.6491C48.691 17.6491 51.0186 20.0443 51.0186 23.8559C51.0186 28.3796 48.4485 30.7748 48.4485 32.3702C48.4485 33.0864 48.8939 33.5201 49.7773 33.5201C53.3264 33.5201 57.4918 29.4419 57.4918 23.6808C57.4918 18.0947 52.63 13.9888 44.4737 13.9888C30.994 13.9888 19.0142 26.4858 19.0142 43.777C19.0142 57.1614 26.6572 66.0061 38.45 66.0061C50.9668 66.0061 58.2043 53.5526 58.2043 49.5105C58.2043 48.6153 57.7466 48.2052 57.2691 48.2052Z"></path>
+                  </g>
+                  <defs>
+                    <radialGradient id="paint0_radial_905_1790" cx="0" cy="0" r="1" gradientTransform="rotate(-49.416 84.778 18.66)scale(61.8733)" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#6420FF"></stop>
+                      <stop offset="1" stop-color="#6420FF" stop-opacity="0"></stop>
+                    </radialGradient>
+                    <radialGradient id="paint1_radial_905_1790" cx="0" cy="0" r="1" gradientTransform="rotate(54.703 1.799 25.019)scale(69.7735)" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#00C4CC"></stop>
+                      <stop offset="1" stop-color="#00C4CC" stop-opacity="0"></stop>
+                    </radialGradient>
+                    <radialGradient id="paint2_radial_905_1790" cx="0" cy="0" r="1" gradientTransform="matrix(43.07399 -43.36818 19.94558 19.81028 15.452 70.905)" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#6420FF"></stop>
+                      <stop offset="1" stop-color="#6420FF" stop-opacity="0"></stop>
+                    </radialGradient>
+                    <radialGradient id="paint3_radial_905_1790" cx="0" cy="0" r="1" gradientTransform="rotate(66.52 8.14 30.33)scale(62.9836 105.512)" gradientUnits="userSpaceOnUse">
+                      <stop stop-color="#00C4CC" stop-opacity=".726"></stop>
+                      <stop offset="0" stop-color="#00C4CC"></stop>
+                      <stop offset="1" stop-color="#00C4CC" stop-opacity="0"></stop>
+                    </radialGradient>
+                    <clipPath id="clip0_905_1790">
+                      <rect width="80" height="80" fill="#fff"></rect>
+                    </clipPath>
+                  </defs>
+                </svg>
+                Canva
+              </span>
+              <span class="tag"><i class="devicon-supabase-plain colored"></i>Supabase</span>
+              <span class="tag"><i class="devicon-firebase-plain colored"></i>Firebase</span>
+              <span class="tag"><i class="devicon-mysql-plain colored"></i>MySQL</span>
+              <span class="tag"><i class="devicon-git-plain colored"></i>Git</span>
+              <span class="tag"><i class="devicon-wordpress-plain colored"></i>WordPress</span>
+              <span class="tag"><i class="devicon-postgresql-plain colored"></i>PostgreSQL</span>
+              <span class="tag"><i class="devicon-matlab-plain colored"></i>MatLab</span>
+              <span class="tag"><i class="si si-cisco icon-cisco"></i>Cisco Packet Tracer</span>
+              <span class="tag"><i class="devicon-github-original icon-github"></i>GitHub</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="experience">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0006</div><h2>Experiences</h2></div>
+        <span class="stamp progress"><span class="dot"></span>IN PROGRESS</span>
+      </div>
+      <div class="stub-body">
+        <div class="timeline">
+          <!-- New entry based on the Captive Portal -->
+          <div class="t-item">
+            <span class="when">June - July 2026</span>
+            <h3>Pablito Cañonero Jr. Company</h3>
+            <div class="role">Developer · Network Services</div>
+            <p>Built a unified captive portal and admin console for managing temporary network access. Features include 256-bit encrypted admin sessions, auto-expiring time-limited access codes, and live network auditing logs.</p>
+            <img src="Assets/Image/CaptivePortalPJC.jpg" alt="PCJ Captive Portal Admin Console">
+          </div>
+          
+          <!-- Existing entries -->
+          <div class="t-item">
+            <span class="when">Octuber 2025 – May 2026</span>
+            <h3>KlasEco</h3>
+            <div class="role">Developer · Thesis, University of Bohol</div>
+            <p>IoT-based smart classroom management system automated lighting, fans,
+            and sensors through integrated microcontrollers. 2nd Place, Create@UB 2026.</p>
+            <img src="Assets/Image/KlasEco.jpg" alt="KlasEco Smart Classroom System">
+          </div>
+          
+          <div class="t-item">
+            <span class="when">January – April 2026</span>
+            <h3>HapsayHub</h3>
+            <div class="role">Developer · On-the-Job Training, BukoLabs.io</div>
+            <p>Event management system streamlining event planning, scheduling, and
+            coordination, built across the full software development lifecycle.</p>
+            <img src="Assets/Image/HapsayHub.jpg" alt="HapsayHub Event Management System">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="certifications">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0007</div><h2>Certifications, Seminars &amp; Trainings</h2></div>
+        <span class="stamp open"><span class="dot"></span>OPEN</span>
+      </div>
+      <div class="stub-body">
+
+      <div class="cert-toolbar">
+        <div class="cert-search-box">
+          <svg class="cert-search-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <input type="text" id="certSearch" placeholder="Search certificates, organizations, events…" autocomplete="off">
+          <button type="button" id="certSearchClear" class="cert-search-clear" aria-label="Clear search">&times;</button>
+        </div>
+
+        <div class="cert-filter-pills" id="certFilterPills">
+          <button type="button" class="cert-pill active" data-year="all">All</button>
+          <button type="button" class="cert-pill" data-year="2026">2026</button>
+          <button type="button" class="cert-pill" data-year="2025">2025</button>
+          <button type="button" class="cert-pill" data-year="2024">2024</button>
+          <button type="button" class="cert-pill" data-year="2023">2023</button>
+          <button type="button" class="cert-pill" data-year="2022">2022</button>
+        </div>
+
+        <div class="cert-count-bar">
+          <span id="certCountText">Showing all certificates</span>
+        </div>
+      </div>
+
+      <div class="cert-empty-state" id="certEmptyState">No certificates match your search.</div>
+
+      <div class="cert-year" data-year="2026">
+        <h4>2026</h4>
+        <div class="cert-list">
+          <div class="cert-row" data-pdf="Assets/Certificates/Introduction-Electronics-Build-First-Circuit-COMPESA.pdf"><span>Introduction to Electronics: Build Your First Circuit (Facilitator) — University of Bohol COMPESA</span><span class="when">May 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Empowering-Minds-Technology-Craft-UB-CETAFA.pdf"><span>Empowering Minds Through Technology and Craft — UB CETAFA</span><span class="when">May 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/AI-Advancement-Sustainable-Dev.pdf"><span>Advancement in AI: Innovating Towards Sustainable Development</span><span class="when">Apr 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/IT-Education-Exponential-Era.pdf"><span>IT Education in the Exponential Era: Cultivating for Cognitive Future</span><span class="when">Apr 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Virtual-Assistance-101-Smart-Work-Habits-DICT.pdf"><span>Virtual Assistance 101 & Smart Work Habits — DICT South Cotabato</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/ROBOSEUM-V2-Creating-Future-One-Robot-UBCOMPESA.pdf"><span>ROBOSEUM V2: "Creating the Future, One Robot at a Time" — UBCOMPESA</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/AI-Ready-ASEAN-Seminar-COMPESA-UBYTES.pdf"><span>AI Ready ASEAN Seminar — COMPESA & UBYTES</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Navigating-Baguio-City-Roads-Hybrid-Pathfinding-Webinar.pdf"><span>Navigating Baguio City's Roads: A Hybrid Pathfinding Model for Small Vehicle Mobility (Webinar) — CITCS</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Intro-to-Packet-Tracer-Cisco.pdf"><span>Introduction to Packet Tracer — Cisco Networking Academy</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/JavaScriptEssentials2Update20260327-32-rv5pl6.pdf"><span>JavaScript Essentials 2 — Cisco Networking Academy / OpenEDG JS Institute</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/ApplyAIUpdateYourResumev120260327-32-4ks54q.pdf"><span>Apply AI: Update Your Resume — Cisco Networking Academy</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/ApplyAIAnalyzeCustomerReviewsv220260327-31-btly62.pdf"><span>Apply AI: Analyze Customer Reviews — Cisco Networking Academy</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/EPCPS-Digital-Armor-Online-Defense.pdf"><span>Digital Armor: Building a Strong Online Defense — Ethel Programming Computer Programming Services</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/EPCPS-AI-Made-Simple.pdf"><span>Artificial Intelligence Made Simple: Learn, Apply, and Innovate — EPCPS</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Intro-to-IoT-Cisco.pdf"><span>Introduction to Internet of Things — Cisco Networking Academy</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/AI-Hour-of-Code-ASEAN.pdf"><span>Awareness-Raising Campaign on AI Through Hour of Code and AI Class ASEAN</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/EPCPS-Android-Apps-Java-Kotlin.pdf"><span>Building Android Apps Using Java/Kotlin — EPCPS</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/COMPESA-Active-Member-Recognition-2025-2026.pdf"><span>Active Member Recognition, AY 2025–2026 — COMPESA</span><span class="when">Mar 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/COMPFEST-2026-Connecting-Minds-Camaraderie.pdf"><span>COMPFEST 2026: "Connecting Minds and Camaraderie to Power Sustainable Innovation"</span><span class="when">Feb 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Blue-Ocean-Digital-Professional.pdf"><span>How to Swim in the Blue Ocean as a Digital Professional Practitioner — DICT ILCDB</span><span class="when">Feb 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Basic-App-Dev-Web-Laravel-Android-Studio.pdf"><span>Basic Introduction to App Development: Web Dev, Laravel & Android Studio — "Build it. Style it. Launch it." (COMPESA)</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Access-Awareness-Innovation-Security.pdf"><span>Access, Awareness, Innovation, and Security — DICT-CAR</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/AI-Ready-ASEAN-Hour-of-Code.pdf"><span>AI Ready ASEAN: Hour of Code Training — ASEAN Foundation / Google.org</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Intro-Power-BI-Crash-Course.pdf"><span>Intro to Power BI (Crash Course) — Data Analytics Philippines</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Web-Dev-PHP-MySQL-DICT-Pampanga.pdf"><span>Web Development Using PHP and MySQL — DICT Pampanga</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/HTML-Essentials-Cisco.pdf"><span>HTML Essentials — Cisco Networking Academy / JS Institute</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Python-Essentials-1-Cisco.pdf"><span>Python Essentials 1 — Cisco Networking Academy / OpenEDG Python Institute</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/CPP-Essentials-1-Cisco.pdf"><span>C++ Essentials 1 — Cisco Networking Academy / OpenEDG C++ Institute</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Introduction-to-Modern-AI-Cisco.pdf"><span>Introduction to Modern AI — Cisco Networking Academy</span><span class="when">Jan 2026</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/AIM-ASEAN-Certificate-Pablito-D-Canonero-Jr.pdf"><span>AI for MSME Advancement in ASEAN (AIM ASEAN) Training Programme — Limitless Lab</span><span class="when">2026</span><button class="view-btn" type="button">View</button></div>
+        </div>
+      </div>
+
+      <div class="cert-year" data-year="2025">
+        <h4>2025</h4>
+        <div class="cert-list">
+          <div class="cert-row" data-pdf="Assets/Certificates/SciMathCom-Month-2025.pdf"><span>SciMathCom Month 2025: COMPESA &amp; UBYTES Seminar (Facilitator) — University of Bohol</span><span class="when">Oct 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/THINK-CODE-CONNECT-Basic-Electronics-Speaker.pdf"><span>THINK.CODE.CONNECT: Basic Electronics Circuits for Young Innovators (Speaker) — University of Bohol JHS Dept.</span><span class="when">Sep 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/DICT-School-Caravan-2025.pdf"><span>DICT School Caravan 2025 — COMPESA</span><span class="when">Sep 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Hard-Hatting-Pinning-Ceremony.pdf"><span>Hard Hatting and Pinning Ceremony — University of Bohol</span><span class="when">Jun 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/COMPED-Power-of-Project-Management-Facilitator.pdf"><span>COMPED Seminar Series: The Power of Project Management (Facilitator) — University of Bohol</span><span class="when">May 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Sumobot-Workshop-Code-Create-Compete.pdf"><span>SUMOBOT Workshop: Code, Create, Compete — UB COMPESA</span><span class="when">Mar 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/COMPED-Igniting-Your-Potential-Facilitator.pdf"><span>COMPED: Igniting Your Potential (Facilitator) — Holy Trinity Academy, Loay</span><span class="when">Mar 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Connect-the-Dots-Research-Flow.pdf"><span>Connect the Dots: How to Reshape & Refine Your Research Flow — COMPESA</span><span class="when">Mar 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Networking-Seminar-Essential-Network-Configuration.pdf"><span>Networking Seminar: Essential Network Configuration Skill Development — COMPESA</span><span class="when">Mar 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Networking-Basics-Cisco.pdf"><span>Networking Basics — Cisco Networking Academy</span><span class="when">Feb 2025</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/PCB-Design-Seminar-Workshop.pdf"><span>PCB Design Seminar Workshop — COMPESA</span><span class="when">Feb 2025</span><button class="view-btn" type="button">View</button></div>
+        </div>
+      </div>
+
+      <div class="cert-year" data-year="2024">
+        <h4>2024</h4>
+        <div class="cert-list">
+          <div class="cert-row" data-pdf="Assets/Certificates/Enhancing-Software-Dev-Skillset.pdf"><span>Enhancing Software Development Skillset</span><span class="when">Apr 2024</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/PSITE-Bohol-ICT-Student-Congress-2024.pdf"><span>Bohol ICT Student Congress 2024, Batch 1 — PSITE Central Visayas</span><span class="when">Apr 2024</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/CrypTalk-Crypto-Web3-Education.pdf"><span>CrypTalk: Crypto &amp; Web3 Education Caravan</span><span class="when">Mar 2024</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/MATLAB-Onramp-MathWorks.pdf"><span>MATLAB Onramp (100% Completion) — MathWorks Training Services</span><span class="when">Feb 2024</span><button class="view-btn" type="button">View</button></div>
+        </div>
+      </div>
+
+      <div class="cert-year" data-year="2023">
+        <h4>2023</h4>
+        <div class="cert-list">
+          <div class="cert-row" data-pdf="Assets/Certificates/National-ICT-Month-Summit-DICT.pdf"><span>National ICT Month ICT Learning and Certification Summit — DICT</span><span class="when">Jun 2023</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/Achievers-List-Top-Performing-Student-2023.pdf"><span>Top Performing Student (Achiever's List), 1st Sem SY 2022–2023, GWA 1.96 — University of Bohol</span><span class="when">Apr 2023</span><button class="view-btn" type="button">View</button></div>
+        </div>
+      </div>
+
+      <div class="cert-year" data-year="2022">
+        <h4>2022</h4>
+        <div class="cert-list">
+          <div class="cert-row" data-pdf="Assets/Certificates/Basic-level-of-coud-computing-certificate-DICT.pdf"><span>DICT-ICT014: Basic Level of Cloud Computing</span><span class="when">Dec 2022</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/CodeChum-C-Programming-1-Basic-C.pdf"><span>CodeChum C Programming 1 (Basic C)</span><span class="when">Dec 2022</span><button class="view-btn" type="button">View</button></div>
+          <div class="cert-row" data-pdf="Assets/Certificates/It-Starts-With-Us-Challenge-Yourself-COMPESA.pdf"><span>It Starts with Us: Challenge Yourself — COMPESA Seminar, UB-IMC</span><span class="when">Nov 2022</span><button class="view-btn" type="button">View</button></div>
+        </div>
+      </div>
+
+      <button type="button" id="certScrollTopBtn" aria-label="Back to top of certifications">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      </div>
+    </section>
+
+    <section class="ticket" id="projects">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0008</div><h2>Projects</h2></div>
+        <span class="stamp progress"><span class="dot"></span>IN PROGRESS</span>
+      </div>
+      <div class="stub-body">
+        <div class="proj-grid">
+          <div class="proj-card"
+              data-title="KlasEco"
+              data-meta="THESIS · 2025–2026"
+              data-desc="IoT-based smart classroom management system integrating software with microcontrollers for automated classroom control automated lighting, fans, and sensors, built and presented with a small team."
+              data-badge="🏆 2nd Place, Create@UB 2026"
+              data-link="https://klaseco.com/information"
+              data-img="Assets/Image/KlasEco.jpg"
+              data-icon="chip"
+              data-tags="Backend,Laravel,MySQL">
+            <div class="proj-thumb">
+              <img src="Assets/Image/KlasEco.jpg" alt="KlasEco login screen">
+            </div>
+            <div class="proj-body">
+              <h3>KlasEco</h3>
+              <div class="meta">THESIS · 2025–2026</div>
+              <p>IoT-based smart classroom management system integrating software
+              with microcontrollers for automated classroom control.</p>
+              <span class="badge">🏆 2nd Place, Create@UB 2026</span>
+              <div class="proj-foot">
+                <span class="view-link">View details →</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="proj-card"
+              data-title="HapsayHub"
+              data-meta="OJT · BUKOLABS.IO · 2025–2026"
+              data-desc="Event management system built during On-the-Job Training at BukoLabs.io designed to streamline event planning, scheduling, and coordination, developed across the full software development lifecycle from design through final presentation."
+              data-badge=""
+              data-link=""
+              data-img="Assets/Image/HapsayHub.jpg"
+              data-icon="calendar"
+              data-tags="Full-Stack,PHP,Supabase">
+            <div class="proj-thumb">
+              <img src="Assets/Image/HapsayHub.jpg" alt="HapsayHub landing page">
+            </div>
+            <div class="proj-body">
+              <h3>HapsayHub</h3>
+              <div class="meta">OJT · BUKOLABS.IO · 2025–2026</div>
+              <p>Event management system for streamlined event planning, scheduling,
+              and coordination.</p>
+              <div class="proj-foot">
+                <span class="view-link">View details →</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Empty slots — replace with new .proj-card content as projects come in -->
+          <div class="proj-card empty">+ Add project</div>
+          <div class="proj-card empty">+ Add project</div>
+          <div class="proj-card empty">+ Add project</div>
+          <div class="proj-card empty">+ Add project</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="resume">
+      <div class="stub-head">
+        <div><div class="num">TICKET #0009</div><h2>Resume</h2></div>
+        <span class="stamp open"><span class="dot"></span>OPEN</span>
+      </div>
+      <div class="stub-body">
+        <div class="resume-box">
+          <p>Download my resume for the full rundown of education, experience,
+          certifications, and skills.</p>
+          <a class="btn primary" href="Pablito-Canonero-Resume.pdf" download>Download Resume ↓</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="ticket" id="contact">
+      <div class="stub-head">
+        <div><div class="num">TICKET #00010</div><h2>Contact</h2></div>
+        <span class="stamp open"><span class="dot"></span>OPEN</span>
+      </div>
+      <div class="stub-body">
+        <div class="contact-grid">
+          <div>
+            <h4>Stay in touch</h4>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=canonero4821@gmail.com" target="_blank" rel="noopener">canonero4821@gmail.com</a>
+            <a href="tel:+639524808855">+63 952 480 8855</a>
+          </div>
+          <div>
+            <h4>Based in</h4>
+            <a href="#" class="loc-link" onclick="openInMaps(event)">Sagbayan, Bohol<br>Philippines 6331</a>
+          </div>
+          <div>
+            <h4>Status</h4>
+            <p><span class="stamp open" style="transform:none;"><span class="dot"></span>Open to work</span></p>
+          </div>
+        </div>
+        <form class="msg-form" onsubmit="return false;" id="contactForm">
+          <div>
+            <label>Name</label>
+            <input type="text" placeholder="Your name">
+          </div>
+          <div>
+            <label>Email</label>
+            <input type="email" placeholder="you@example.com">
+          </div>
+          <div>
+            <label>Message</label>
+            <textarea placeholder="Your message"></textarea>
+          </div>
+
+          <div class="recaptcha-wrap">
+            <div class="g-recaptcha"
+                 data-sitekey="6LcFoVotAAAAAKhoPGefZJDFmCFTMsc__IrAuEGb"
+                 data-callback="onRecaptchaSuccess"
+                 data-expired-callback="onRecaptchaExpired">
+            </div>
+          </div>
+
+          <div>
+            <a class="btn primary disabled" id="sendBtn" href="https://mail.google.com/mail/?view=cm&fs=1&to=canonero4821@gmail.com" target="_blank" rel="noopener" onclick="return checkRobot(event)">Send via email</a>
+            <small style="display:block;margin-top:10px;">This form is a visual placeholder connect it to a form service (e.g. Formspree) to make it functional, or just use the email button.</small>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Photo lightbox modal -->
+<div class="modal-overlay" id="photo-modal">
+  <div class="modal-box photo-modal-box">
+    <button class="modal-close" id="photo-modal-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <img src="Assets/Image/IMG_7022.JPG" alt="Engr. Pablito D. Cañonero Jr. — larger photo">
+    <div class="photo-modal-caption">Pablito D. Cañonero Jr.</div>
+  </div>
+</div>
+
+<!-- Project detail modal -->
+<div class="modal-overlay" id="proj-modal">
+  <div class="modal-box">
+    <button class="modal-close" id="modal-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    <div class="modal-thumb" id="modal-thumb"></div>
+    <div class="modal-content">
+      <div class="meta" id="modal-meta"></div>
+      <h3 id="modal-title"></h3>
+      <p id="modal-desc"></p>
+      <span class="badge" id="modal-badge"></span>
+      <div class="modal-link" id="modal-link"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Certificate detail modal -->
+<div class="pdf-modal-overlay" id="pdfModalOverlay">
+  <div class="pdf-modal">
+    <div class="pdf-modal-header">
+      <span>Certificate Viewer</span>
+      <button class="pdf-modal-close" id="pdfModalClose" type="button">&times;</button>
+    </div>
+    <div class="pdf-modal-body" id="pdfModalBody">
+      <div class="pdf-canvas-wrap" id="pdfCanvasWrap"></div>
+      <div class="pdf-watermark-layer" id="pdfWatermarkLayer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Chatbot -->
+<button id="chat-fab" aria-label="Open chat assistant">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5H5l-2 2 .5-3.8A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+</button>
+
+<div id="chat-panel">
+  <div class="chat-head">
+    <span class="dot"></span>
+    <div><strong>Ask about Pablito</strong><span>Usually replies instantly</span></div>
+  </div>
+  <div class="chat-body" id="chat-body"></div>
+  <div class="chat-suggest">
+    <span class="chip" data-q="skills">Skills?</span>
+    <span class="chip" data-q="projects">Projects?</span>
+    <span class="chip" data-q="certifications">Certifications?</span>
+    <span class="chip" data-q="contact">Contact info?</span>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chat-input" placeholder="Type a question...">
+    <button id="chat-send">Send</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+<script src="Assets/js/script.js"></script>
+<script src="Assets/js/loading.js"></script>
+<script src="Assets/js/cert-links.js"></script>
+<script src="Assets/js/contact.js"></script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+.cert-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: background-color 0.15s ease;
+}
+
+.cert-row:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.cert-row .when {
+  white-space: nowrap;
+  margin-left: auto;
+  color: rgba(150, 30, 30, 0.85);
+  font-size: 0.85rem;
+}
+
+.view-btn {
+  position: relative;
+  flex-shrink: 0;
+  padding: 6px 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #e8edf7;
+  background: linear-gradient(180deg, #2a3a5c 0%, #1e2c4a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease, border-color 0.15s ease;
+}
+
+.view-btn:hover {
+  background: linear-gradient(180deg, #34497a 0%, #24345a 100%);
+  border-color: rgba(120, 160, 255, 0.3);
+}
+
+.view-btn:active {
+  transform: scale(0.96);
+}
+
+/* Loading state shown the instant the button is clicked */
+.view-btn.is-loading {
+  color: transparent;
+  pointer-events: none;
+}
+
+.view-btn.is-loading::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #e8edf7;
+  border-radius: 50%;
+  animation: btnSpin 0.6s linear infinite;
+}
+
+@keyframes btnSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* ============================= */
+/* Missing PDF Highlight         */
+/* ============================= */
+
+.cert-row.cert-missing-pdf {
+  background-color: rgba(220, 30, 30, 0.1);
+  border-left: 3px solid #dc1e1e;
+  padding-left: 8px;
+}
+
+.cert-row.cert-missing-pdf span:first-child {
+  color: #ff6b6b;
+}
+
+.cert-row.cert-missing-pdf .when {
+  color: rgba(150, 30, 30, 0.65);
+}
+
+.cert-row.cert-missing-pdf:hover {
+  background-color: rgba(220, 30, 30, 0.16);
+}
+
+.cert-row.cert-missing-pdf .view-btn {
+  background: linear-gradient(180deg, #3a2626 0%, #2a1c1c 100%);
+  border-color: rgba(220, 30, 30, 0.25);
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.cert-row.cert-missing-pdf .view-btn:hover {
+  background: linear-gradient(180deg, #3a2626 0%, #2a1c1c 100%);
+  transform: none;
+}
+
+/* ============================= */
+/* PDF Viewer Modal              */
+/* ============================= */
+
+.pdf-modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 9, 18, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.pdf-modal-overlay.active {
+  display: flex;
+  animation: pdfOverlayFade 0.25s ease forwards;
+}
+
+/* Applied alongside .active while the modal is closing */
+.pdf-modal-overlay.closing {
+  animation: pdfOverlayFadeOut 0.18s ease forwards;
+}
+
+@keyframes pdfOverlayFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pdfOverlayFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/*
+  Modal sizes to its content (up to a cap) instead of always
+  filling a fixed height, so short certificates don't leave big
+  empty gaps on tall/portrait viewports.
+*/
+.pdf-modal {
+  width: 100%;
+  max-width: 880px;
+  max-height: 90vh;
+  height: auto;
+  background: #10141f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  animation: pdfModalRise 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: center center;
+}
+
+.pdf-modal-overlay.closing .pdf-modal {
+  animation: pdfModalFallOut 0.18s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes pdfModalRise {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes pdfModalFallOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(14px) scale(0.96);
+  }
+}
+
+.pdf-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #0c0f18;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #eef1f8;
+  font-weight: 600;
+  font-size: 0.88rem;
+  letter-spacing: 0.01em;
+  flex-shrink: 0;
+}
+
+.pdf-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.1s ease;
+}
+
+.pdf-modal-close:hover {
+  background: rgba(255, 80, 80, 0.12);
+  border-color: rgba(255, 80, 80, 0.3);
+  color: #ff8080;
+}
+
+.pdf-modal-close:active {
+  transform: scale(0.92);
+}
+
+/*
+  Body scrolls when the rendered certificate is taller than the
+  modal's max-height, on any screen size. It no longer stretches
+  to fill leftover space when the certificate is short.
+*/
+.pdf-modal-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  position: relative;
+  background: #05070c;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Canvas wrapper holds each rendered PDF page */
+.pdf-canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Each page fades/slides in as it finishes rendering */
+.pdf-canvas-wrap canvas {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  background: #fff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  /* prevent easy drag-out of canvas as an image */
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: pdfPageIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pdfPageIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Spinner + label shown while the PDF is loading/rendering */
+.pdf-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 70px 20px;
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.82rem;
+  animation: pdfLoadingFade 0.2s ease;
+}
+
+@keyframes pdfLoadingFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pdf-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-top-color: #7aa0ff;
+  border-radius: 50%;
+  animation: btnSpin 0.8s linear infinite;
+}
+
+.pdf-modal-body::-webkit-scrollbar {
+  width: 10px;
+}
+
+.pdf-modal-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pdf-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.pdf-modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Watermark layer sits above the canvas, ignores clicks */
+.pdf-watermark-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  z-index: 5;
+}
+
+.pdf-watermark-layer span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(220, 30, 30, 0.18);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: center;
+  transform: rotate(-30deg);
+  white-space: nowrap;
+  user-select: none;
+}
+
+/* ============================= */
+/* Responsive breakpoints        */
+/* ============================= */
+
+/* Large desktop */
+@media (min-width: 1440px) {
+  .pdf-modal {
+    max-width: 960px;
+    max-height: 88vh;
+  }
+}
+
+/* Laptop / small desktop */
+@media (min-width: 1024px) and (max-width: 1439px) {
+  .pdf-modal {
+    max-width: 880px;
+    max-height: 88vh;
+  }
+}
+
+/* Tablet (portrait & landscape, e.g. iPad Mini 768px) */
+@media (min-width: 641px) and (max-width: 1023px) {
+  .pdf-modal-overlay {
+    padding: 18px;
+  }
+
+  .pdf-modal {
+    max-width: 92vw;
+    max-height: 85vh;
+    border-radius: 12px;
+  }
+
+  .pdf-canvas-wrap {
+    padding: 14px;
+  }
+}
+
+/* Mobile large (e.g. iPhone Pro Max, big Android) */
+@media (min-width: 481px) and (max-width: 640px) {
+  .pdf-modal-overlay {
+    padding: 12px;
+  }
+
+  .pdf-modal {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 10px;
+  }
+
+  .pdf-modal-header {
+    padding: 12px 14px;
+    font-size: 0.82rem;
+  }
+
+  .pdf-canvas-wrap {
+    padding: 12px;
+  }
+
+  .pdf-watermark-layer span {
+    font-size: 0.62rem;
+  }
+}
+
+/* Mobile small (e.g. iPhone SE, small Android) */
+@media (max-width: 480px) {
+  .pdf-modal-overlay {
+    padding: 8px;
+    align-items: stretch;
+  }
+
+  .pdf-modal {
+    max-width: 100%;
+    max-height: 96vh;
+    height: auto;
+    border-radius: 8px;
+    margin: auto 0;
+  }
+
+  .pdf-modal-header {
+    padding: 10px 12px;
+    font-size: 0.78rem;
+  }
+
+  .pdf-modal-close {
+    width: 26px;
+    height: 26px;
+    font-size: 1rem;
+  }
+
+  .pdf-canvas-wrap {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .pdf-watermark-layer span {
+    font-size: 0.56rem;
+  }
+}
+
+/* Very short viewports (landscape phones) */
+@media (max-height: 480px) {
+  .pdf-modal {
+    max-height: 96vh;
+  }
+
+  .pdf-modal-header {
+    padding: 8px 12px;
+  }
+}
+
+/* ============================= */
+/* Print Protection              */
+/* ============================= */
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .pdf-modal-overlay,
+  .pdf-modal-overlay * {
+    visibility: hidden !important;
+  }
+
+  .pdf-modal-overlay::before {
+    content: "This certificate is view-only and cannot be printed. Please contact the owner directly for an official copy.";
+    visibility: visible !important;
+    display: block;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #000;
+    font-family: sans-serif;
+  }
+}
+
+/* ============================= */
+/* Certificate Search & Filter   */
+/* ============================= */
+
+.cert-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 4px 18px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cert-search-box {
+  position: relative;
+  flex: 1 1 260px;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+}
+
+.cert-search-icon {
+  position: absolute;
+  left: 12px;
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+.cert-search-box input {
+  width: 100%;
+  padding: 9px 34px 9px 34px;
+  font-size: 0.85rem;
+  color: #e8edf7;
+  background: #10141f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.cert-search-box input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.cert-search-box input:focus {
+  border-color: rgba(120, 160, 255, 0.4);
+  background: #131826;
+}
+
+.cert-search-clear {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.cert-search-clear:hover {
+  background: rgba(255, 80, 80, 0.18);
+  color: #ff8080;
+}
+
+.cert-filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.cert-pill {
+  padding: 7px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  background: #10141f;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.cert-pill:hover {
+  border-color: rgba(120, 160, 255, 0.3);
+  color: #e8edf7;
+}
+
+.cert-pill.active {
+  background: linear-gradient(180deg, #2a3a5c 0%, #1e2c4a 100%);
+  border-color: rgba(120, 160, 255, 0.4);
+  color: #e8edf7;
+}
+
+.cert-count-bar {
+  flex: 1 1 100%;
+  text-align: right;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+@media (max-width: 640px) {
+  .cert-count-bar {
+    text-align: left;
+  }
+}
+
+.cert-empty-state {
+  display: none;
+  padding: 28px 12px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============================= */
+/* Scroll to Top (Certifications) */
+/* ============================= */
+
+.ticket#certifications {
+  position: relative;
+}
+
+#certScrollTopBtn {
+  position: sticky;
+  float: right;
+  bottom: 22px;
+  margin-top: 10px;
+  margin-right: 4px;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #2a3a5c 0%, #1e2c4a 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: #e8edf7;
+  cursor: pointer;
+  z-index: 50;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px) scale(0.9);
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.25s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+#certScrollTopBtn.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  animation: certScrollBtnPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#certScrollTopBtn:hover {
+  background: linear-gradient(180deg, #34497a 0%, #24345a 100%);
+  border-color: rgba(120, 160, 255, 0.35);
+}
+
+#certScrollTopBtn:active {
+  transform: scale(0.9);
+}
+
+#certScrollTopBtn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.2s ease;
+}
+
+#certScrollTopBtn:hover svg {
+  transform: translateY(-2px);
+}
+
+@keyframes certScrollBtnPop {
+  0% { transform: translateY(12px) scale(0.7); }
+  60% { transform: translateY(-2px) scale(1.06); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 480px) {
+  #certScrollTopBtn {
+    width: 42px;
+    height: 42px;
+    bottom: 14px;
+  }
+
+  #certScrollTopBtn svg {
+    width: 18px;
+    height: 18px;
+  }
+}

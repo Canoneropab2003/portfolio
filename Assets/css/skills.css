@@ -1,0 +1,355 @@
+/* ===== Skill groups layout ===== */
+.skill-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Each skill category now sits in its own quiet panel instead of
+   floating freely — this is what gives the section structure and
+   keeps every row visually anchored regardless of how many tags it holds. */
+.skill-group {
+  background: #fafafb;
+  border: 1px solid #eef0f3;
+  border-radius: 16px;
+  padding: 18px 20px 20px;
+}
+
+.skill-groups h4 {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.skill-groups h4::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #a1a7b3;
+  box-shadow: 0 0 0 3px rgba(161, 167, 179, 0.15);
+  flex-shrink: 0;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Tighter variant used for the Tools & Technologies row so more pills
+   fit per line and rows land more evenly */
+.tag-row--tight {
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.tag-row--tight .tag {
+  padding: 7px 13px 7px 11px;
+  font-size: 0.83rem;
+}
+
+/* ===== Pill / tag style ===== */
+.tag {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px 9px 13px;
+  background: #ffffff;
+  border: 1px solid #ececf1;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: default;
+  overflow: hidden;
+  isolation: isolate;
+  white-space: nowrap;
+  line-height: 1;
+
+  /* Entrance animation variables */
+  opacity: 0;
+  transform: translateY(15px) scale(0.9);
+  animation: tagIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  animation-delay: calc(var(--i, 0) * 45ms);
+
+  /* Springy transitions for interaction (Added color for text hover effect) */
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease,
+              background 0.3s ease,
+              color 0.3s ease;
+}
+
+/* Continuous ambient shimmer that sweeps across the pill */
+.tag::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    105deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.8) 50%,
+    transparent 80%
+  );
+  transform: translateX(-150%);
+  animation: ambientShimmer 4s infinite linear;
+  animation-delay: calc(var(--i, 0) * 0.2s);
+}
+
+@keyframes ambientShimmer {
+  0%, 40% { transform: translateX(-150%); }
+  60%, 100% { transform: translateX(150%); }
+}
+
+/* Pause the ambient shimmer on hover to let the pop effect take over */
+.tag:hover::after {
+  animation-play-state: paused;
+}
+
+.tag:hover {
+  transform: translateY(-4px) scale(1.04);
+  border-color: #d8dbe3;
+  background: #ffffff;
+  /* Layered shadows for tactile depth */
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.05),
+    0 12px 24px -4px rgba(0, 0, 0, 0.08);
+}
+
+.tag:active {
+  transform: translateY(-1px) scale(1.01);
+  transition-duration: 0.1s;
+}
+
+/* Keyboard accessibility focus state */
+.tag:focus-visible {
+  outline: none;
+  border-color: #3b82f6; 
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2), 0 4px 10px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Icon slot: a fixed-width box around every icon so devicon, Font
+   Awesome, Simple Icons glyphs, and inline SVG logos all line up on
+   the same optical center and baseline, no matter how each icon draws. */
+.tag i,
+.tag .si,
+.tag .tag-icon-svg {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  flex-shrink: 0;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tag-row--tight .tag i,
+.tag-row--tight .tag .si,
+.tag-row--tight .tag .tag-icon-svg {
+  width: 16px;
+  font-size: 0.92rem;
+}
+
+/* Full-bleed badge icons */
+.tag .tag-icon-svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.tag-row--tight .tag .tag-icon-svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Every icon type gets the same pop-and-tilt on hover */
+.tag:hover i,
+.tag:hover .si,
+.tag:hover .tag-icon-svg {
+  transform: scale(1.2) rotate(-8deg);
+}
+
+/* Staggered entrance — assign order per pill automatically */
+.tag-row .tag:nth-child(1)  { --i: 1; }
+.tag-row .tag:nth-child(2)  { --i: 2; }
+.tag-row .tag:nth-child(3)  { --i: 3; }
+.tag-row .tag:nth-child(4)  { --i: 4; }
+.tag-row .tag:nth-child(5)  { --i: 5; }
+.tag-row .tag:nth-child(6)  { --i: 6; }
+.tag-row .tag:nth-child(7)  { --i: 7; }
+.tag-row .tag:nth-child(8)  { --i: 8; }
+.tag-row .tag:nth-child(9)  { --i: 9; }
+.tag-row .tag:nth-child(10) { --i: 10; }
+.tag-row .tag:nth-child(11) { --i: 11; }
+.tag-row .tag:nth-child(12) { --i: 12; }
+.tag-row .tag:nth-child(13) { --i: 13; }
+.tag-row .tag:nth-child(14) { --i: 14; }
+
+/* Bouncy entrance animation */
+@keyframes tagIn {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.9);
+  }
+  70% {
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .tag {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .tag:hover {
+    transform: none;
+  }
+  .tag:hover i,
+  .tag:hover .si,
+  .tag:hover .tag-icon-svg {
+    transform: none;
+  }
+  .tag::after {
+    display: none;
+  }
+}
+
+/* ===== Devicon brand icons already come colored via "colored" class ===== */
+/* No overrides needed for devicon-*-plain.colored icons */
+
+/* ===== Font Awesome icon accent colors (non-brand skills) ===== */
+.icon-iot        { color: #10b981; }  /* green   */
+.icon-software   { color: #6366f1; }  /* indigo  */
+.icon-literacy   { color: #3b82f6; }  /* blue    */
+.icon-data       { color: #f59e0b; }  /* amber   */
+.icon-time       { color: #ef4444; }  /* red     */
+.icon-problem    { color: #8b5cf6; }  /* violet  */
+.icon-team       { color: #ec4899; }  /* pink    */
+.icon-comm       { color: #06b6d4; }  /* cyan    */
+
+
+/* ===== Color-Coordinated Hover States for Tags ===== */
+/* Note: Utilizes the :has() selector for modern browsers */
+
+.tag:has(.icon-iot):hover {
+  background: rgba(16, 185, 129, 0.05);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(16, 185, 129, 0.15);
+}
+
+.tag:has(.icon-software):hover {
+  background: rgba(99, 102, 241, 0.05);
+  color: #6366f1;
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(99, 102, 241, 0.15);
+}
+
+.tag:has(.icon-literacy):hover {
+  background: rgba(59, 130, 246, 0.05);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(59, 130, 246, 0.15);
+}
+
+.tag:has(.icon-data):hover {
+  background: rgba(245, 158, 11, 0.05);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(245, 158, 11, 0.15);
+}
+
+.tag:has(.icon-time):hover {
+  background: rgba(239, 68, 68, 0.05);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(239, 68, 68, 0.15);
+}
+
+.tag:has(.icon-problem):hover {
+  background: rgba(139, 92, 246, 0.05);
+  color: #8b5cf6;
+  border-color: rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(139, 92, 246, 0.15);
+}
+
+.tag:has(.icon-team):hover {
+  background: rgba(236, 72, 153, 0.05);
+  color: #ec4899;
+  border-color: rgba(236, 72, 153, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(236, 72, 153, 0.15);
+}
+
+.tag:has(.icon-comm):hover {
+  background: rgba(6, 182, 212, 0.05);
+  color: #06b6d4;
+  border-color: rgba(6, 182, 212, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(6, 182, 212, 0.15);
+}
+
+/* ===== Simple Icons (used for brands devicon doesn't cover) ===== */
+.si {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.icon-canva  { color: #00c4cc; }  /* Canva teal   */
+.icon-cisco  { color: #1ba0d7; }  /* Cisco blue   */
+.icon-github { color: #181717; }  /* GitHub black */
+
+/* Additional Simple Icons hover state coloring */
+.tag:has(.icon-canva):hover {
+  background: rgba(0, 196, 204, 0.05);
+  color: #00c4cc;
+  border-color: rgba(0, 196, 204, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(0, 196, 204, 0.15);
+}
+
+.tag:has(.icon-cisco):hover {
+  background: rgba(27, 160, 215, 0.05);
+  color: #1ba0d7;
+  border-color: rgba(27, 160, 215, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(27, 160, 215, 0.15);
+}
+
+.tag:has(.icon-github):hover {
+  background: rgba(24, 23, 23, 0.05);
+  color: #181717;
+  border-color: rgba(24, 23, 23, 0.4);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 12px 24px -4px rgba(24, 23, 23, 0.15);
+}
+
+/* ===== Responsive tweak ===== */
+@media (max-width: 480px) {
+  .skill-group {
+    padding: 14px 14px 16px;
+  }
+
+  .tag {
+    font-size: 0.82rem;
+    padding: 7px 12px;
+  }
+
+  .tag-row--tight .tag {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+  }
+}

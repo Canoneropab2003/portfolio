@@ -1,0 +1,386 @@
+/* ==========================================================================
+   PRELOADER — "ticket dispenser" redesign.
+   Same ticket-stub identity (punch notches, mono digits, accent line) but
+   built around one real 3D moment: the ticket is dispensed from a slot in
+   3D space, and a small spinning token — a genuine coin-flip using
+   backface-visibility, not a flat spinner — sits where the old ring did.
+
+   Markup: identical IDs to before (#preloader, .pl-ticket, .pl-brand,
+   .pl-dot, #pl-status, .pl-divider, .pl-track, #pl-bar, #pl-pct), plus:
+   .pl-ring-wrap (token's outer track), .pl-scanline (one-time print sweep),
+   .pl-barcode (decorative strip), and a separate #pl-sr live region for
+   screen readers. See the matching loading.js for markup + copy.
+
+   This pass:
+   - aligns border-radius/shadow with the real var(--radius)/var(--shadow)
+     tokens, and switches the notches to the flush "bite" style your
+     .ticket component actually uses now (not the old bulging circles)
+   - swaps a few fixed navy shadows for neutral black ones, since your
+     --shadow token itself goes pure black in dark mode
+   - REMOVED the old .app{opacity:0}/page-reveal trick: it was hiding the
+     skeleton-shimmer overlays (in style.css) for the entire time they
+     were supposed to be visible, then fading .app back in at the exact
+     same moment those overlays were fading out — the two cancelled each
+     other out, which is why nothing appeared to happen. The skeleton
+     overlays now own the "reveal" moment entirely; .app just needs to
+     stay at full opacity underneath the (fully opaque) preloader.
+   ========================================================================== */
+
+html.is-loading,
+html.is-loading body{
+  overflow:hidden;
+  height:100%;
+}
+
+/* visually-hidden but still announced by screen readers — used by the
+   sr-only live region in loading.js instead of the visual ticket */
+.pl-sr-only{
+  position:absolute;
+  width:1px;
+  height:1px;
+  padding:0;
+  margin:-1px;
+  overflow:hidden;
+  clip:rect(0,0,0,0);
+  white-space:nowrap;
+  border:0;
+}
+
+#preloader{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  perspective:1400px;
+  background:
+    radial-gradient(60% 50% at 50% 36%, color-mix(in srgb, var(--accent, #2F5DE0) 9%, transparent), transparent 70%),
+    radial-gradient(circle, color-mix(in srgb, var(--line, #DCE2ED) 65%, transparent) 1px, transparent 1.6px) 0 0/20px 20px,
+    var(--bg, #E9EDF5);
+  opacity:1;
+  visibility:visible;
+  transition:opacity .55s ease, visibility 0s linear 0s;
+}
+
+#preloader.is-hidden{
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .5s ease, visibility 0s linear .5s;
+  pointer-events:none;
+}
+#preloader.is-hidden .pl-ticket{
+  animation:pl-retract .5s cubic-bezier(.4,0,1,1) both;
+}
+
+/* the ticket stub — dispensed from a slot above, tilting flat in 3D as it
+   lands (transform-origin sits at the top edge, like a hinge at the slot) */
+.pl-ticket{
+  position:relative;
+  width:min(300px, 84vw);
+  transform-style:preserve-3d;
+  transform-origin:top center;
+  will-change:transform, opacity;
+  background:
+    linear-gradient(90deg, transparent, var(--accent, #2F5DE0) 40%, var(--accent, #2F5DE0) 60%, transparent) top center / 68% 3px no-repeat,
+    var(--surface, #fff);
+  border:1px solid color-mix(in srgb, var(--line, #DCE2ED) 70%, transparent);
+  border-radius:var(--radius, 16px);
+  box-shadow:var(--shadow, 0 1px 2px rgba(18,33,61,.04), 0 20px 48px rgba(18,33,61,.09)), 0 30px 60px -16px rgba(0,0,0,.22);
+  padding:34px 30px 26px;
+  text-align:center;
+  animation:pl-dispense .7s cubic-bezier(.22,.75,.28,1) both;
+}
+
+/* print-head sweep — plays once as the ticket lands, like the line a
+   receipt printer leaves behind; purely cosmetic, never loops */
+.pl-scanline{
+  position:absolute;
+  left:12%;
+  right:12%;
+  top:4%;
+  height:2px;
+  border-radius:2px;
+  pointer-events:none;
+  background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent, #2F5DE0) 80%, transparent), transparent);
+  box-shadow:0 0 10px color-mix(in srgb, var(--accent, #2F5DE0) 55%, transparent);
+  animation:pl-scan .68s ease-out .12s both;
+}
+
+/* die-cut stub notches — flush "bite" cutouts matching the real .ticket
+   component in style.css (not the old bulging-circle style) */
+.pl-ticket::before,
+.pl-ticket::after{
+  content:"";
+  position:absolute;
+  width:16px;
+  height:34px;
+  top:50%;
+  transform:translateY(-50%);
+  background:var(--bg, #E9EDF5);
+}
+.pl-ticket::before{
+  left:0;
+  border-radius:0 17px 17px 0;
+}
+.pl-ticket::after{
+  right:0;
+  border-radius:17px 0 0 17px;
+}
+
+.pl-brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-family:'Sora', sans-serif;
+  font-weight:800;
+  font-size:14.5px;
+  letter-spacing:.03em;
+  color:var(--ink, #12213D);
+  margin-bottom:22px;
+}
+.pl-brand .pl-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:var(--ok, #17A673);
+  box-shadow:0 0 0 0 rgba(23,166,115,.35);
+  animation:pl-pulse 1.6s ease-in-out infinite;
+}
+
+/* ---- the signature element: a spinning token, genuine 3D coin-flip ---- */
+
+.pl-ring-wrap{
+  position:relative;
+  width:76px;
+  height:76px;
+  margin:0 auto 20px;
+  perspective:320px;
+  filter:drop-shadow(0 10px 12px rgba(0,0,0,.18));
+}
+/* static outer track — the "housing" the token spins inside */
+.pl-ring-wrap::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  border:2px solid var(--line, #DCE2ED);
+  opacity:.6;
+}
+/* faint ambient glow behind the token */
+.pl-ring-wrap::after{
+  content:"";
+  position:absolute;
+  inset:14px;
+  border-radius:50%;
+  background:radial-gradient(circle, color-mix(in srgb, var(--accent, #2F5DE0) 30%, transparent), transparent 72%);
+  filter:blur(5px);
+}
+
+.pl-ring{
+  position:absolute;
+  inset:8px;
+  border-radius:50%;
+  transform-style:preserve-3d;
+  will-change:transform;
+  animation:pl-token-spin var(--pl-spin-dur, 2.6s) linear infinite;
+}
+/* front face — glossy accent disc, like a token's face side */
+.pl-ring::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  backface-visibility:hidden;
+  background:radial-gradient(circle at 33% 28%, #6E8CF2, var(--accent, #2F5DE0) 62%, color-mix(in srgb, var(--accent, #2F5DE0) 70%, #0B173A) 100%);
+  box-shadow:
+    inset 0 2px 3px rgba(255,255,255,.4),
+    inset 0 -8px 12px rgba(0,0,0,.22);
+}
+/* back face — milled coin edge, rotated 180° so it lands right-way-round */
+.pl-ring::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+  transform:rotateY(180deg);
+  backface-visibility:hidden;
+  background:repeating-conic-gradient(from 0deg, var(--surface-2, #EEF1F8) 0deg 9deg, var(--surface, #fff) 9deg 18deg);
+  box-shadow:inset 0 0 0 2px var(--line, #DCE2ED), inset 0 3px 6px rgba(0,0,0,.12);
+}
+
+/* "approved" moment — added once loading actually finishes: the token
+   settles front-facing instead of spinning forever, and everything picks
+   up the ok color for a beat before the ticket retracts */
+.pl-ticket.is-complete .pl-ring{
+  animation-play-state:paused;
+  transform:rotateX(14deg) rotateY(360deg) scale(1.06);
+  transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+}
+.pl-ticket.is-complete .pl-ring-wrap::before{
+  border-color:var(--ok, #17A673);
+  transition:border-color .3s ease;
+}
+.pl-ticket.is-complete .pl-ring-wrap::after{
+  background:radial-gradient(circle, color-mix(in srgb, var(--ok, #17A673) 45%, transparent), transparent 72%);
+  animation:pl-approve-pulse .5s ease;
+}
+.pl-ticket.is-complete .pl-bar{
+  background:linear-gradient(135deg, var(--ok, #17A673), #22caa0);
+  box-shadow:0 0 10px color-mix(in srgb, var(--ok, #17A673) 45%, transparent);
+}
+.pl-ticket.is-complete .pl-status{
+  color:var(--ok, #17A673);
+}
+
+.pl-status{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:11.5px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--muted, #5C6B84);
+  margin-bottom:16px;
+  min-height:1.2em;
+  transition:opacity .22s ease;
+}
+.pl-status.is-swapping{ opacity:0; }
+
+/* perforated stub divider — small round dots, reads like a tear line */
+.pl-divider{
+  height:1px;
+  margin:0 0 18px;
+  background-image:linear-gradient(90deg, var(--line, #DCE2ED) 45%, transparent 0%);
+  background-position:top;
+  background-size:8px 1px;
+  background-repeat:repeat-x;
+}
+
+.pl-progress-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.pl-track{
+  position:relative;
+  flex:1;
+  height:6px;
+  border-radius:999px;
+  background:var(--surface-2, #EEF1F8);
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.08);
+  overflow:hidden;
+}
+
+.pl-bar{
+  position:relative;
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  background:linear-gradient(135deg, var(--accent, #2F5DE0), #4C74EE);
+  box-shadow:0 0 10px color-mix(in srgb, var(--accent, #2F5DE0) 45%, transparent);
+  transition:width .18s ease-out;
+  overflow:hidden;
+}
+.pl-bar::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  width:60%;
+  animation:pl-sheen 1.4s ease-in-out infinite;
+}
+
+.pl-pct{
+  font-family:'IBM Plex Mono', monospace;
+  font-size:12.5px;
+  font-weight:600;
+  font-variant-numeric:tabular-nums;
+  color:var(--ink, #12213D);
+  min-width:38px;
+  text-align:right;
+}
+
+/* decorative barcode strip — the last thing a real ticket stub has printed
+   along its bottom edge; purely visual, kept low-contrast so it doesn't
+   compete with the progress readout above it. Guard bars (thicker lines at
+   each end) are what make it read as a barcode rather than static. */
+.pl-barcode{
+  position:relative;
+  height:18px;
+  margin-top:18px;
+  opacity:.45;
+  background-image:
+    repeating-linear-gradient(90deg, var(--ink, #12213D) 0 1px, transparent 1px 3px),
+    repeating-linear-gradient(90deg, var(--ink, #12213D) 0 2px, transparent 2px 6px, var(--ink, #12213D) 6px 7px, transparent 7px 10px);
+  background-blend-mode:multiply;
+}
+.pl-barcode::before,
+.pl-barcode::after{
+  content:"";
+  position:absolute;
+  top:0;
+  width:3px;
+  height:100%;
+  background:var(--ink, #12213D);
+}
+.pl-barcode::before{ left:0; }
+.pl-barcode::after{ right:0; }
+
+@keyframes pl-token-spin{
+  from{ transform:rotateX(14deg) rotateY(0deg); }
+  to{ transform:rotateX(14deg) rotateY(360deg); }
+}
+@keyframes pl-pulse{
+  0%,100%{ box-shadow:0 0 0 0 rgba(23,166,115,.35); }
+  50%{ box-shadow:0 0 0 5px rgba(23,166,115,0); }
+}
+@keyframes pl-sheen{
+  0%{ transform:translateX(-120%); }
+  100%{ transform:translateX(220%); }
+}
+@keyframes pl-scan{
+  from{ top:4%; opacity:1; }
+  to{ top:96%; opacity:0; }
+}
+@keyframes pl-approve-pulse{
+  0%{ transform:scale(1); opacity:.55; }
+  60%{ transform:scale(1.3); opacity:1; }
+  100%{ transform:scale(1.05); opacity:.7; }
+}
+@keyframes pl-dispense{
+  0%{ opacity:0; transform:rotateX(-78deg) translateY(-10px) translateZ(-150px); }
+  55%{ opacity:1; }
+  80%{ transform:rotateX(6deg) translateY(0) translateZ(0); }
+  100%{ opacity:1; transform:rotateX(0deg) translateY(0) translateZ(0); }
+}
+@keyframes pl-retract{
+  0%{ transform:rotateX(0deg) translateY(0) translateZ(0); opacity:1; }
+  25%{ transform:rotateX(-6deg) translateY(2px) translateZ(0); opacity:1; }
+  100%{ transform:rotateX(58deg) translateY(-14px) translateZ(-70px); opacity:0; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .pl-ring{ animation:none; transform:rotateX(14deg) rotateY(28deg); }
+  .pl-brand .pl-dot,
+  .pl-bar::after,
+  .pl-scanline,
+  .pl-ticket.is-complete .pl-ring-wrap::after{ animation:none; }
+  .pl-scanline{ display:none; }
+  .pl-ticket, .pl-ticket.is-hidden{ animation:none; }
+  #preloader{ transition:none; }
+}
+
+/* Fallback for browsers without color-mix() (pre-2023 Safari/Firefox/Chrome).
+   Plain, slightly muted equivalents so the loader still looks designed
+   rather than losing every tint, glow, and translucent edge silently. */
+@supports not (color: color-mix(in srgb, red, blue)){
+  #preloader{ background:var(--bg, #E9EDF5); }
+  .pl-ticket{ border-color:var(--line, #DCE2ED); }
+  .pl-ring-wrap::after{ background:var(--accent, #2F5DE0); opacity:.14; }
+  .pl-bar{ box-shadow:none; }
+  .pl-scanline{ background:var(--accent, #2F5DE0); box-shadow:none; opacity:.7; }
+  .pl-ticket.is-complete .pl-ring-wrap::after{ background:var(--ok, #17A673); opacity:.18; }
+  .pl-ticket.is-complete .pl-bar{ box-shadow:none; }
+}

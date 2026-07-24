@@ -1,0 +1,170 @@
+/* =========================================
+   education.css
+   ========================================= */
+
+/* --- 1. Base Container & Ticket Styling --- */
+#education {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #374151;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ticket {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* --- 2. Ticket Header --- */
+.stub-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px dashed #d1d5db;
+  padding-bottom: 20px;
+  margin-bottom: 25px;
+}
+
+.stub-head .num {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.stub-head h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #111827;
+}
+
+.stamp.completed {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #047857;
+  background-color: #d1fae5;
+  padding: 6px 14px;
+  border-radius: 9999px;
+}
+
+/* Styling for the status dot inside the stamp */
+.stamp .dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #10B981; /* Moves the inline color here */
+}
+
+/* --- 3. Timeline Styling --- */
+.timeline {
+  border-left: 3px solid #e5e7eb;
+  padding-left: 25px;
+  margin-left: 10px;
+}
+
+.t-item {
+  position: relative;
+  margin-bottom: 35px;
+}
+
+.t-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Timeline Dots */
+.t-item::before {
+  content: '';
+  position: absolute;
+  left: -33px; /* Centers the dot on the border */
+  top: 0;
+  width: 14px;
+  height: 14px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 1px #e5e7eb;
+}
+
+/* --- 4. Typography within Timeline --- */
+.when {
+  display: block;
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.t-item h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.role {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 12px;
+}
+
+.t-item p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin-bottom: 15px;
+}
+
+/* --- 5. Social Links & Image Rendering --- */
+.social-links-container {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center; /* Perfectly centers items vertically on the same line */
+  gap: 16px; /* Replaces margin-right to cleanly space the Website and Facebook links */
+}
+
+.link-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px; /* Space between the icon/logo and the text */
+  text-decoration: none;
+  color: #3b82f6;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.2s ease;
+}
+
+.link-item:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.link-icon {
+  font-size: 1.1rem;
+}
+
+/* 
+  Specific fix for image_5a1ec3.png layout:
+  Scoping with #education ensures it cannot be overridden by other stylesheets.
+*/
+#education .custom-logo {
+  width: 18px;          
+  height: 18px;
+  object-fit: contain;  
+  display: block;
+  border-radius: 50%;   
+  margin: 0;            
+  box-shadow: none;     
+  border: none;
+  transform: none;      /* Ensures no 3D tilt shifts its alignment */
+  animation: none;      /* Ensures no floating load animation applies */
+}
