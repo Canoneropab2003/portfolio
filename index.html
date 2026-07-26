@@ -66,9 +66,6 @@
     </div>
     <div class="nav-top-divider"></div>
 
-    <!-- Everything below is wrapped in .nav-panel, which is the
-         dropdown surface on mobile/tablet and invisible (display:contents)
-         on desktop, so nothing changes there. -->
     <div class="nav-panel">
       <div class="tabs" id="tabs">
         <div class="tab-group">
@@ -159,7 +156,12 @@
           <div class="num">TICKET #0001</div>
           <h2>Top</h2>
         </div>
-        <span class="stamp open"><span class="dot"></span>OPEN TO WORK</span>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <span class="stamp open" id="view-counter">
+            <span class="dot"></span>Loading views…
+          </span>
+          <span class="stamp open"><span class="dot"></span>OPEN TO WORK</span>
+        </div>
       </div>
       <div class="stub-body">
         <div class="hero-flex">
@@ -985,5 +987,6 @@
 <script src="Assets/js/nav.js"></script>
 <script src="Assets/js/cert-links.js"></script>
 <script src="Assets/js/contact.js"></script>
+<script src="Assets/js/view-counter.js"></script>
 </body>
 </html>
