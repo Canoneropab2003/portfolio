@@ -121,6 +121,39 @@
   .stamp.progress{color:var(--warn);}
   .stamp .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
 
+  /* ---------- View counter chip ----------
+     Sits next to the status stamp in .stub-head. Uses the site's own accent
+     tokens so it automatically follows light/dark theme like everything
+     else, instead of introducing its own hardcoded colors. */
+  .stub-head-badges{
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  }
+  @media (max-width:640px){
+    .stub-head-badges{width:100%;}
+  }
+
+  .view-chip{
+    display:inline-flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:999px;
+    border:1px solid var(--line);
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;font-weight:600;letter-spacing:.05em;
+    flex-shrink:0;white-space:nowrap;
+    transition:background .2s ease, color .2s ease, transform .15s ease, border-color .2s ease;
+  }
+  .view-chip:hover{
+    background:var(--accent);color:#fff;transform:translateY(-1px);
+  }
+  .view-chip-icon{width:13px;height:13px;flex-shrink:0;}
+  .view-chip-count{white-space:nowrap;min-width:1ch;}
+
+  @media (max-width:480px){
+    .view-chip{font-size:10.5px;padding:5px 10px;}
+    .view-chip-icon{width:12px;height:12px;}
+  }
+
   .stub-body{padding:30px 34px 40px;}
   @media (max-width:640px){ .stub-body{padding:22px 20px 30px;} }
 
