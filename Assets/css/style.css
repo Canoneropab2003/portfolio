@@ -122,44 +122,51 @@
     font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
     border:2px solid currentColor;border-radius:7px;
     padding:5px 10px;transform:rotate(-6deg);
-    display:inline-flex;align-items:center;gap:5px;flex-shrink:0;
+    display:inline-flex;align-items:center;gap:5px;
     letter-spacing:.05em;
+    flex:0 0 auto;
     max-width:100%;
     overflow:hidden;text-overflow:ellipsis;
   }
   .stamp.open{color:var(--ok);}
   .stamp.progress{color:var(--warn);}
-  .stamp .dot{width:5px;height:5px;border-radius:50%;background:currentColor;}
+  .stamp .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+  @media (max-width:480px){
+    .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;}
+  }
   @media (max-width:360px){
-    .stamp{font-size:9.5px;padding:4px 9px;transform:rotate(-4deg);}
+    .stamp{font-size:8.5px;padding:4px 7px;}
   }
 
   /* ---------- View counter chip ----------
      Compact glassmorphic "views" pill: bold count, trending-up icon,
      gradient glow ring, plus an always-visible subtitle row ("Since HH:MM
      Today" + "% vs Yesterday" delta) underneath — all driven by the site's
-     own accent tokens so it follows light/dark theme automatically. Sized
-     down and tightened across breakpoints so it stays compact on every
-     screen from small phones to large desktop monitors. */
+     own accent tokens so it follows light/dark theme automatically.
+
+     .stub-head-badges is forced to stay in ONE row (flex-wrap:nowrap) at
+     every screen size so the views pill and the "OPEN TO WORK" stamp
+     always sit side by side, even on the smallest phones — instead of
+     stacking on top of each other. Each side shrinks/truncates as needed
+     to make room for the other. */
   .stub-head-badges{
-    display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;
+    display:flex;align-items:flex-start;gap:12px;
+    flex-wrap:nowrap;
   }
   @media (max-width:640px){
-    .stub-head-badges{width:100%;justify-content:space-between;align-items:center;}
+    .stub-head-badges{width:100%;justify-content:space-between;align-items:center;gap:10px;}
+  }
+  @media (max-width:480px){
+    .stub-head-badges{gap:8px;}
   }
   @media (max-width:360px){
-    .stub-head-badges{
-        width:100%;
-        justify-content:flex-start;
-        flex-direction:column;
-        align-items:flex-start;
-        gap:8px;
-    }
+    .stub-head-badges{gap:6px;}
   }
 
   .view-chip-wrap{
     display:flex;flex-direction:column;gap:5px;
-    flex-shrink:0;
+    flex:1 1 auto;
+    min-width:0; /* allows the pill/subtitle to shrink instead of forcing the row to wrap */
   }
 
   .view-chip{
@@ -170,9 +177,10 @@
     background:linear-gradient(135deg, var(--accent-soft), var(--surface));
     color:var(--ink);
     font-family:'Sora',sans-serif;
-    flex-shrink:0;white-space:nowrap;
+    max-width:100%;
+    overflow:hidden;
+    white-space:nowrap;
     isolation:isolate;
-    overflow:visible;
     cursor:pointer;
     transition:transform .18s ease, box-shadow .18s ease;
   }
@@ -220,6 +228,7 @@
     color:var(--ink);
     line-height:1;
     white-space:nowrap;min-width:1ch;
+    overflow:hidden;text-overflow:ellipsis;
   }
 
   .view-chip-label{
@@ -227,6 +236,7 @@
     font-weight:800;
     color:var(--ink);
     line-height:1;
+    flex-shrink:0;
   }
 
   html[data-theme="dark"] .view-chip{
@@ -238,11 +248,13 @@
     .view-chip-icon{width:14px;height:14px;}
   }
   @media (max-width:480px){
-    .view-chip{padding:6px 12px;}
+    .view-chip{padding:6px 11px;gap:5px;}
+    .view-chip-icon{width:13px;height:13px;}
   }
   @media (max-width:360px){
-    .view-chip{padding:6px 11px;}
-    .view-chip-count,.view-chip-label{font-size:13px;}
+    .view-chip{padding:5px 10px;gap:4px;}
+    .view-chip-count,.view-chip-label{font-size:12.5px;}
+    .view-chip-icon{width:12px;height:12px;}
   }
   @media (min-width:1600px){
     .view-chip{padding:9px 18px;}
@@ -250,10 +262,13 @@
     .view-chip-count,.view-chip-label{font-size:18px;}
   }
 
-  /* subtitle row: "Since HH:MM Today" + "% vs Yesterday" */
+  /* subtitle row: "Since HH:MM Today" + "% vs Yesterday" — truncates on
+     one line rather than wrapping, so it never pushes the stamp down */
   .view-chip-sub{
-    display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+    display:flex;align-items:center;gap:6px;
     padding-left:4px;
+    max-width:100%;
+    overflow:hidden;
   }
 
   .view-chip-since{
@@ -261,6 +276,9 @@
     font-size:10px;
     color:var(--muted);
     white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis;
+    flex-shrink:1;
+    min-width:0;
   }
 
   .view-chip-delta{
@@ -272,6 +290,7 @@
     background:var(--ok-soft);
     color:var(--ok);
     white-space:nowrap;
+    flex-shrink:0;
   }
   .view-chip-delta.negative{
     background:var(--warn-soft);
@@ -283,11 +302,15 @@
   }
 
   @media (max-width:640px){
-    .view-chip-sub{padding-left:2px;}
+    .view-chip-sub{padding-left:2px;gap:5px;}
     .view-chip-since,.view-chip-delta{font-size:9.5px;}
   }
+  @media (max-width:480px){
+    .view-chip-since{display:none;} /* hide "Since HH:MM" first on very tight widths — the delta chip is the more useful signal */
+    .view-chip-delta{font-size:9px;padding:2px 7px;}
+  }
   @media (max-width:360px){
-    .view-chip-sub{flex-direction:column;align-items:flex-start;gap:4px;}
+    .view-chip-delta{font-size:8.5px;padding:2px 6px;}
   }
   @media (min-width:1600px){
     .view-chip-since,.view-chip-delta{font-size:11px;}
