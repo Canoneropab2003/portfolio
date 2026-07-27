@@ -1,28 +1,30 @@
 /* ==========================================================================
    view-counter.js
-   Adds a public "site views" counter + "since" time + "% vs yesterday"
-   delta, using the free CounterAPI.dev service (v1 endpoint — no signup,
-   no API key required). No backend required — works on GitHub Pages,
-   Vercel, etc.
+   Adds a public "site views" counter + a LIVE current-time clock + "% vs
+   yesterday" delta, using the free CounterAPI.dev service (v1 endpoint —
+   no signup, no API key required). No backend required — works on GitHub
+   Pages, Vercel, etc.
 
    NOTE ON THE DELTA: CounterAPI.dev's basic /up endpoint only tracks ONE
    running total, with no built-in daily breakdown. To get a real
    "vs yesterday" percentage (not a fake number), this script keeps two
    extra date-stamped keys — one for "today" and one for "yesterday" —
-   and compares them. This does mean 3 small requests instead of 1.
-   If CounterAPI.dev ever changes its read-only GET behavior, the catch
-   block below falls back to hiding the delta rather than showing wrong data.
+   and compares them.
 
-   NOTE ON "SINCE HH:MM" — this always reflects the VISITOR'S OWN real
-   device clock and timezone (via `new Date()` + `toLocaleTimeString`),
-   never a hardcoded or server timezone. Two safety fixes vs. the
-   previous version:
-     1. Midnight rollover: if a tab is left open across midnight, the
-        stored "first view" timestamp from yesterday is detected and
-        reset, so it doesn't show a stale time under "Today".
-     2. Format fallback: if `toLocaleTimeString` ever throws (some
-        locked-down browser environments restrict Intl), a manual
-        HH:MM string is built instead of leaving the label blank.
+   KNOWN LIMITATION: CounterAPI.dev's read-only GET endpoint (used to
+   check yesterday's final count) does not send CORS headers, so browsers
+   block it outright (console shows a CORS/net::ERR_FAILED error — this
+   is the service itself, not a bug in this script). It's wrapped in
+   .catch(() => 0), so it safely falls back to showing "New today"
+   instead of breaking the rest of the widget.
+
+   NOTE ON "SINCE HH:MM" (CHANGED): this previously cached the FIRST time
+   a visitor loaded the page each day and kept showing that same frozen
+   time all day (e.g. stuck at "14:05" even at 7:22 PM). That's been
+   removed. It now shows the ACTUAL, LIVE current time on the visitor's
+   own device clock, ticking forward every second — so it always
+   matches whatever time it really is for them right now (e.g. Philippines
+   time GMT+8).
 
    Requires in your HTML:
    <div class="stub-head-badges">
@@ -63,9 +65,9 @@
     return d.toISOString().slice(0, 10);
   }
 
-  // Builds a real HH:MM string from the visitor's own device clock.
+  // Builds a real HH:MM string from the visitor's own device clock/timezone.
   // Tries the locale-aware Intl API first; falls back to a manual
-  // 24-hour build if Intl is unavailable/restricted, so "Since" never
+  // 24-hour build if Intl is unavailable/restricted, so the clock never
   // ends up blank.
   function formatTime(d) {
     try {
@@ -132,59 +134,21 @@
       }
     });
 
-  // ---- 2. "Since HH:MM Today" — always the visitor's real device time ----
-  const now = new Date();
-  const todayStr = dateKey(now);
-  const SINCE_STORAGE_KEY = `portfolio-first-view-${todayStr}`;
-
-  let firstViewTime;
-  try {
-    const stored = localStorage.getItem(SINCE_STORAGE_KEY);
-
-    if (stored) {
-      const storedDate = new Date(stored);
-      // Midnight-rollover guard: only trust the stored value if it was
-      // actually recorded on TODAY'S date key. (Since the key itself is
-      // already date-stamped, a mismatch here means the stored value is
-      // corrupt/invalid rather than stale — but this keeps it safe.)
-      if (!isNaN(storedDate.getTime()) && dateKey(storedDate) === todayStr) {
-        firstViewTime = storedDate;
-      } else {
-        firstViewTime = now;
-        localStorage.setItem(SINCE_STORAGE_KEY, now.toISOString());
-      }
-    } else {
-      firstViewTime = now;
-      localStorage.setItem(SINCE_STORAGE_KEY, now.toISOString());
-    }
-  } catch (e) {
-    // localStorage unavailable (private browsing etc.) — just use "now"
-    firstViewTime = now;
+  // ---- 2. LIVE current time (replaces the old "first view today" cache) ----
+  // No localStorage involved anymore — always reflects the visitor's real,
+  // current device clock (e.g. Philippines GMT+8), ticking forward live.
+  function renderLiveClock() {
+    if (!sinceEl) return;
+    const nowLive = new Date();
+    sinceEl.textContent = `Since ${formatTime(nowLive)} Today`;
   }
 
-  if (sinceEl) {
-    sinceEl.textContent = `Since ${formatTime(firstViewTime)} Today`;
-  }
-
-  // Keep "Since" accurate if the tab is left open across midnight: once
-  // the real date changes, re-check and reset to a fresh "first view"
-  // for the new day so the label never silently shows a stale time.
-  setInterval(() => {
-    const nowCheck = new Date();
-    if (dateKey(nowCheck) !== todayStr) {
-      const newKey = `portfolio-first-view-${dateKey(nowCheck)}`;
-      try {
-        localStorage.setItem(newKey, nowCheck.toISOString());
-      } catch (e) {
-        /* ignore — storage unavailable */
-      }
-      if (sinceEl) {
-        sinceEl.textContent = `Since ${formatTime(nowCheck)} Today`;
-      }
-    }
-  }, 60 * 1000); // check once a minute — cheap, and midnight only happens once a day
+  renderLiveClock();               // show immediately on load
+  setInterval(renderLiveClock, 1000); // tick forward every second, live
 
   // ---- 3. "% vs Yesterday" using date-stamped counter keys ----
+  const now = new Date();
+  const todayStr = dateKey(now);
   const yesterday = new Date(now);
   yesterday.setDate(yesterday.getDate() - 1);
 
