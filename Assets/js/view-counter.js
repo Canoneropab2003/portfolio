@@ -13,6 +13,17 @@
    If CounterAPI.dev ever changes its read-only GET behavior, the catch
    block below falls back to hiding the delta rather than showing wrong data.
 
+   NOTE ON "SINCE HH:MM" — this always reflects the VISITOR'S OWN real
+   device clock and timezone (via `new Date()` + `toLocaleTimeString`),
+   never a hardcoded or server timezone. Two safety fixes vs. the
+   previous version:
+     1. Midnight rollover: if a tab is left open across midnight, the
+        stored "first view" timestamp from yesterday is detected and
+        reset, so it doesn't show a stale time under "Today".
+     2. Format fallback: if `toLocaleTimeString` ever throws (some
+        locked-down browser environments restrict Intl), a manual
+        HH:MM string is built instead of leaving the label blank.
+
    Requires in your HTML:
    <div class="stub-head-badges">
      <div class="view-chip-wrap">
@@ -52,8 +63,18 @@
     return d.toISOString().slice(0, 10);
   }
 
+  // Builds a real HH:MM string from the visitor's own device clock.
+  // Tries the locale-aware Intl API first; falls back to a manual
+  // 24-hour build if Intl is unavailable/restricted, so "Since" never
+  // ends up blank.
   function formatTime(d) {
-    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+    try {
+      return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+    } catch (e) {
+      const hh = String(d.getHours()).padStart(2, "0");
+      const mm = String(d.getMinutes()).padStart(2, "0");
+      return `${hh}:${mm}`;
+    }
   }
 
   // increment (or create) a counter key, returns the new value
@@ -111,7 +132,7 @@
       }
     });
 
-  // ---- 2. "Since HH:MM Today" ----
+  // ---- 2. "Since HH:MM Today" — always the visitor's real device time ----
   const now = new Date();
   const todayStr = dateKey(now);
   const SINCE_STORAGE_KEY = `portfolio-first-view-${todayStr}`;
@@ -119,8 +140,19 @@
   let firstViewTime;
   try {
     const stored = localStorage.getItem(SINCE_STORAGE_KEY);
+
     if (stored) {
-      firstViewTime = new Date(stored);
+      const storedDate = new Date(stored);
+      // Midnight-rollover guard: only trust the stored value if it was
+      // actually recorded on TODAY'S date key. (Since the key itself is
+      // already date-stamped, a mismatch here means the stored value is
+      // corrupt/invalid rather than stale — but this keeps it safe.)
+      if (!isNaN(storedDate.getTime()) && dateKey(storedDate) === todayStr) {
+        firstViewTime = storedDate;
+      } else {
+        firstViewTime = now;
+        localStorage.setItem(SINCE_STORAGE_KEY, now.toISOString());
+      }
     } else {
       firstViewTime = now;
       localStorage.setItem(SINCE_STORAGE_KEY, now.toISOString());
@@ -133,6 +165,24 @@
   if (sinceEl) {
     sinceEl.textContent = `Since ${formatTime(firstViewTime)} Today`;
   }
+
+  // Keep "Since" accurate if the tab is left open across midnight: once
+  // the real date changes, re-check and reset to a fresh "first view"
+  // for the new day so the label never silently shows a stale time.
+  setInterval(() => {
+    const nowCheck = new Date();
+    if (dateKey(nowCheck) !== todayStr) {
+      const newKey = `portfolio-first-view-${dateKey(nowCheck)}`;
+      try {
+        localStorage.setItem(newKey, nowCheck.toISOString());
+      } catch (e) {
+        /* ignore — storage unavailable */
+      }
+      if (sinceEl) {
+        sinceEl.textContent = `Since ${formatTime(nowCheck)} Today`;
+      }
+    }
+  }, 60 * 1000); // check once a minute — cheap, and midnight only happens once a day
 
   // ---- 3. "% vs Yesterday" using date-stamped counter keys ----
   const yesterday = new Date(now);
