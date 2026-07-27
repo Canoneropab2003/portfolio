@@ -141,14 +141,16 @@
   /* ---------- View counter chip ----------
      Compact glassmorphic "views" pill: bold count, trending-up icon,
      gradient glow ring, plus an inline delta badge ("New today" / "% vs
-     Yesterday") that sits on the SAME ROW as the pill (not stacked below
-     it) so the whole component stays short and compact instead of
-     growing tall on narrow screens. The "Since HH:MM" timestamp is only
-     shown when there's enough room (desktop / larger tablets); it's
-     dropped first as the screen narrows since the delta badge carries
-     the more useful signal. .stub-head-badges stays nowrap at every
-     size so the views group and the "OPEN TO WORK" stamp always sit
-     side by side. */
+     Yesterday") that sits on the SAME ROW as the pill.
+
+     FIX: .view-chip-wrap previously used flex:1 1 auto, which made it
+     GROW to fill all remaining row width (to leave room for the
+     "OPEN TO WORK" stamp) — but since nothing inside it had flex-grow,
+     that extra width just became visible blank space after the pill.
+     It now uses flex:0 1 auto — it can still SHRINK on narrow screens
+     (so it never pushes the stamp off-screen) but never grows beyond
+     its own content, so no more phantom gap. .stub-head-badges keeps
+     the stamp pinned to the right via justify-content on narrow widths. */
   .stub-head-badges{
     display:flex;align-items:center;gap:12px;
     flex-wrap:nowrap;
@@ -165,7 +167,7 @@
 
   .view-chip-wrap{
     display:flex;align-items:center;flex-wrap:nowrap;gap:8px;
-    flex:1 1 auto;
+    flex:0 1 auto; /* shrink only — never grows past its own content width */
     min-width:0; /* allows children to shrink instead of forcing a wrap */
   }
 
@@ -264,9 +266,9 @@
   }
 
   /* inline subtitle group: "Since HH:MM Today" + "% vs Yesterday" —
-     sits BESIDE the pill on the same row at all sizes (never stacked
-     below it). Each piece truncates/hides as space runs out rather
-     than wrapping to a new line. */
+     sits BESIDE the pill on the same row, hugging its own content
+     width (no growth), truncating/hiding pieces as space runs out
+     rather than wrapping to a new line. */
   .view-chip-sub{
     display:flex;align-items:center;gap:6px;
     flex-shrink:0;
