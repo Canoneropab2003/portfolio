@@ -140,41 +140,35 @@
 
   /* ---------- View counter chip ----------
      Compact glassmorphic "views" pill: bold count, trending-up icon,
-     gradient glow ring, plus an inline delta badge ("New today" / "% vs
-     Yesterday") on the same row as the pill.
+     gradient glow ring, plus an inline subtitle ("Since HH:MM Today" +
+     "% vs Yesterday"/"New today" delta) that always sits next to (or,
+     on very tight widths, wraps neatly below) the pill.
 
-     FIX (overlap/clipping bug): the pill previously had flex-shrink:1
-     with overflow:hidden + text-overflow:ellipsis, which let the browser
-     squeeze it narrower than its own text — clipping digits mid-number
-     (e.g. "27 views" showing as "2. views"). The pill now uses
-     flex-shrink:0 so it always renders at its natural, un-clipped size.
-     To make room for that on very small phones, .stub-head-badges
-     switches to flex-wrap:wrap below 480px, so the "OPEN TO WORK" stamp
-     drops to its own line cleanly instead of overlapping or squeezing
-     the pill. Above 480px (larger phones, tablets, laptops, desktop),
-     everything still sits on one row. */
+     FIX: "Since HH:MM Today" was previously hidden entirely below 900px
+     via display:none — that's why it disappeared on tablet/mobile. It's
+     now ALWAYS visible at every screen size. Instead of hiding it, the
+     .view-chip-sub row is allowed to wrap onto its own line beneath the
+     pill when the row gets too narrow to fit everything side by side —
+     so nothing is ever cut or hidden, it just reflows. */
   .stub-head-badges{
     display:flex;align-items:center;gap:12px;
     flex-wrap:nowrap;
   }
   @media (max-width:640px){
-    .stub-head-badges{width:100%;justify-content:space-between;gap:10px;}
+    .stub-head-badges{width:100%;justify-content:space-between;gap:10px;flex-wrap:wrap;}
   }
   @media (max-width:480px){
-    .stub-head-badges{
-        flex-wrap:wrap;
-        justify-content:flex-start;
-        gap:8px;
-    }
+    .stub-head-badges{gap:8px;}
   }
 
   .view-chip-wrap{
-    display:flex;align-items:center;flex-wrap:nowrap;gap:8px;
+    display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;
     flex:0 1 auto; /* shrink only — never grows past its own content width */
-    min-width:0; /* allows the subtitle piece to shrink/hide without touching the pill */
+    min-width:0;
+    row-gap:6px;
   }
-  @media (max-width:480px){
-    .view-chip-wrap{flex:1 1 100%;} /* takes the full row on tiny phones, stamp wraps below */
+  @media (max-width:640px){
+    .view-chip-wrap{flex:1 1 100%;} /* takes the full row so the stamp wraps to its own line below */
   }
 
   .view-chip{
@@ -268,14 +262,12 @@
     .view-chip-count,.view-chip-label{font-size:18px;}
   }
 
-  /* inline subtitle group: "Since HH:MM Today" + "% vs Yesterday" —
-     sits beside the pill, shrinks/truncates itself only (never the
-     pill), and hides pieces as space runs out. */
+  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
+     ALWAYS visible at every screen size now. Wraps as its own row when
+     there isn't room beside the pill, rather than being hidden. */
   .view-chip-sub{
-    display:flex;align-items:center;gap:6px;
-    flex-shrink:1;
+    display:flex;align-items:center;flex-wrap:wrap;gap:6px;
     min-width:0;
-    overflow:hidden;
   }
 
   .view-chip-since{
@@ -283,7 +275,6 @@
     font-size:10px;
     color:var(--muted);
     white-space:nowrap;
-    overflow:hidden;text-overflow:ellipsis;
   }
 
   .view-chip-delta{
@@ -306,18 +297,17 @@
     color:var(--muted);
   }
 
-  /* "Since HH:MM Today" only shows when there's room to spare */
-  @media (max-width:900px){
-    .view-chip-since{display:none;}
-  }
   @media (max-width:640px){
     .view-chip-sub{gap:5px;}
+    .view-chip-since{font-size:9.5px;}
     .view-chip-delta{font-size:9.5px;padding:2px 7px;}
   }
   @media (max-width:480px){
+    .view-chip-since{font-size:9px;}
     .view-chip-delta{font-size:9px;padding:2px 6px;}
   }
   @media (max-width:360px){
+    .view-chip-since{font-size:8.5px;}
     .view-chip-delta{font-size:8.5px;padding:2px 6px;}
   }
   @media (min-width:1600px){
