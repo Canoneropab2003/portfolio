@@ -120,16 +120,17 @@
   @media (max-width:860px){ .ticket::before,.ticket::after{display:none;} }
 
   /* ---------- STUB HEAD ----------
-     LEFT-ALIGNMENT FIX: .stub-head is now ALWAYS flex-direction:column
-     at every screen size — the title block ("TICKET #0001" / "Top")
-     sits on top, and the badges row (pill + stamp + subtitle) sits
-     directly beneath it, both flush to the same left edge. This
-     matches the layout your screenshots already show and keeps it
-     consistent from mobile through desktop, instead of switching
-     between a side-by-side layout on wide screens and a stacked one
-     on narrow screens (which caused inconsistent alignment). */
+     RIGHT-SIDE PLACEMENT: title ("TICKET #0001" / "Top") sits on the
+     LEFT, and the badges group (pill + stamp + subtitle) sits on the
+     RIGHT, side by side, at every screen size — this is a row layout
+     (not stacked), matching how it looked before. On narrow phones
+     where both can't fit on one line, .stub-head wraps and the badges
+     group drops to its own row but stays RIGHT-aligned (not left),
+     via justify-content:flex-end, so it visually stays on "the right
+     side" even when stacked. */
   .stub-head{
-    display:flex;flex-direction:column;align-items:flex-start;
+    display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
+    flex-wrap:wrap;
     gap:14px;
     padding:24px 30px 18px;
     border-bottom:2px dashed var(--line);
@@ -142,12 +143,12 @@
   .stamp{
     font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
     border:2px solid currentColor;border-radius:7px;
-    padding:8px 12px; /* padding matched to .view-chip so both sit on the same visual baseline */
+    padding:8px 12px;
     display:inline-flex;align-items:center;gap:5px;
     letter-spacing:.05em;
     flex-shrink:0;
     white-space:nowrap;
-    order:2; /* sits right after the pill on row one */
+    order:2;
   }
   .stamp.open{color:var(--ok);}
   .stamp.progress{color:var(--warn);}
@@ -163,23 +164,27 @@
   }
 
   /* ---------- View counter chip ----------
-     Pill (.view-chip) and stamp (.stamp) are locked onto the same first
-     row via `order` and both use MATCHING vertical padding so their tops
-     and bottoms line up cleanly (no more one looking taller/shorter
-     than the other). The whole badges row is explicitly left-aligned
-     with justify-content:flex-start at EVERY breakpoint — it never
-     stretches, centers, or spreads apart, matching the title above it. */
+     .stub-head-badges is the whole right-hand group. It's given
+     margin-left:auto so it pushes to the RIGHT edge of the row while
+     the title stays flush LEFT — this is what places it "on the right
+     side under Top" as requested. When the row wraps on narrow
+     screens, justify-content:flex-end keeps the badges group aligned
+     to the right rather than snapping back to the left. */
   .stub-head-badges{
     display:flex;align-items:center;flex-wrap:wrap;
-    justify-content:flex-start;
+    justify-content:flex-end;
     gap:10px;
     row-gap:8px;
-    width:100%;
-    min-width:0;
+    margin-left:auto;
     max-width:100%;
   }
   @media (max-width:640px){
-    .stub-head-badges{gap:8px;row-gap:7px;}
+    .stub-head-badges{
+        width:100%;
+        margin-left:0;
+        justify-content:flex-end; /* stays right-aligned even stacked below the title on mobile */
+        gap:8px;row-gap:7px;
+    }
   }
   @media (max-width:360px){
     .stub-head-badges{gap:6px;row-gap:6px;}
@@ -188,7 +193,7 @@
   .view-chip{
     position:relative;
     display:inline-flex;align-items:center;gap:7px;
-    padding:8px 16px; /* matches .stamp's vertical padding for a shared baseline */
+    padding:8px 16px;
     border-radius:999px;
     background:linear-gradient(135deg, var(--accent-soft), var(--surface));
     color:var(--ink);
@@ -198,7 +203,7 @@
     cursor:pointer;
     flex-shrink:0;
     max-width:100%;
-    order:1; /* first item on row one */
+    order:1;
     transition:transform .18s ease, box-shadow .18s ease;
   }
 
@@ -280,11 +285,11 @@
   }
 
   /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
-     always its own full row beneath the pill+stamp row, left-aligned
-     to match everything above it. */
+     always its own full row beneath the pill+stamp row, RIGHT-aligned
+     to match the badges group above it. */
   .view-chip-sub{
     display:flex;align-items:center;flex-wrap:wrap;
-    justify-content:flex-start;
+    justify-content:flex-end;
     gap:6px;
     order:3;
     flex:1 1 100%;
