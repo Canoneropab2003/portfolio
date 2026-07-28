@@ -124,27 +124,43 @@
      stub-head's OWN bottom edge, which is precisely where the dashed
      border-bottom sits. This means the notch is always perfectly
      centered on the dashed line no matter how tall or short the header
-     ends up being — no fixed pixel guess.
+     ends up being — no fixed pixel guess. (Verified against a real
+     render: this vertical centering is correct as-is.)
 
-     Horizontally: `left`/`right` on an absolutely positioned
-     pseudo-element are measured from the POSITIONED ANCESTOR'S PADDING
-     EDGE — not from wherever its own padding happens to be. Since
-     .stub-head has no border of its own, its padding edge IS already
-     its true visual/outer edge. That means `left:0` / `right:0` already
-     lands the notch flush on the card's real edge with zero gap — no
-     extra offset required.
+     Horizontally, the 20px-wide notch is anchored flush at
+     `left:0` / `right:0` — i.e. its flat (non-rounded) side sits
+     EXACTLY on stub-head's own left/right edge, which lines up with
+     the ticket's outer edge, with the rounded bulge curving inward
+     into the card. (Previously this used a negative value intended to
+     have the notch straddle the edge half-in/half-out — but that left
+     a visible gap of white card between the true edge and the visible
+     part of the notch, i.e. it still read as a disconnected floating
+     circle. Anchoring flush at 0 removes any ambiguity: the notch's
+     edge touches the card's edge with zero gap, guaranteed.) */
+  /* ---------- STUB HEAD ----------
+     RIGHT-SIDE PLACEMENT: title ("TICKET #0001" / "Top") sits on the
+     LEFT, and the badges group (pill + stamp + subtitle) sits on the
+     RIGHT, side by side, at every screen size.
 
-     (Earlier this used calc(-1 * --stub-pad-x), on the assumption that
-     stub-head's inner content padding needed to be "cancelled out."
-     That double-subtracts: it pushes the notch an extra --stub-pad-x
-     outside the card's edge. Because .ticket has overflow-x:hidden —
-     which, per CSS's overflow-axis-mixing rules, also forces
-     overflow-y to `auto` and turns .ticket into a real clipping box —
-     that outside portion of the notch gets clipped away, leaving only
-     a thin sliver visible: exactly the "detached floating circle with
-     a gap" bug. Anchoring flush at 0 removes the ambiguity entirely:
-     the notch's flat edge touches the card's true edge with zero gap,
-     guaranteed, regardless of stub-head's own padding.) */
+     NOTCH ALIGNMENT: the die-cut "bite" notches are pseudo-elements of
+     .stub-head itself (position:relative), positioned with
+     `bottom:-20px` — i.e. exactly half their own 40px height below
+     stub-head's OWN bottom edge, which is precisely where the dashed
+     border-bottom sits. This is verified correct: the notch stays
+     perfectly centered on the dashed line no matter how tall or short
+     the header ends up being.
+
+     Horizontally, `left`/`right` on an absolutely positioned
+     pseudo-element are measured from stub-head's PADDING edge, not
+     its outer/visual edge — and stub-head has 30px of left/right
+     padding (--stub-pad-x below). Left at `0` therefore lands the
+     notch 30px inside the card's true edge, which is exactly the
+     "detached floating circle" gap seen in testing. Offsetting by
+     `-1 * --stub-pad-x` cancels that padding out, so the notch's flat
+     side actually touches the card's visual edge with zero gap,
+     regardless of how much padding stub-head has. --stub-pad-x is
+     shared with the padding declaration below so the two can never
+     drift out of sync again. */
   .stub-head{
     --stub-pad-x:30px;
     display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
@@ -160,8 +176,7 @@
   .stub-head h2{font-size:clamp(20px,3.6vw,28px);margin-top:5px;}
 
   /* die-cut stub notches — subtle half-circle "bite" that always sits
-     centered on the dashed line, regardless of header height, and
-     flush against the card's true left/right edge with zero gap */
+     centered on the dashed line, regardless of header height */
   .stub-head::before,.stub-head::after{
     content:"";position:absolute;
     width:20px;height:40px;
@@ -171,12 +186,11 @@
     z-index:1;
   }
   .stub-head::before{
-    left:0; /* flush with stub-head's padding edge, which is already the card's true
-               visual edge (stub-head has no border) — zero gap, no offset needed */
+    left:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:0 20px 20px 0;
   }
   .stub-head::after{
-    right:0; /* flush with stub-head's true right edge — zero gap, no offset needed */
+    right:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:20px 0 0 20px;
   }
 
