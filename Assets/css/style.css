@@ -100,45 +100,56 @@
   .ticket.active{display:block;animation:rise .38s cubic-bezier(.2,.7,.3,1) both;}
   @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
-  /* die-cut stub notches — subtle half-circle "bite" flush with the ticket edge
-     (previously a full circle centered on the edge and bulging outside the card) */
-  .ticket::before,.ticket::after{
-    content:"";position:absolute;
-    width:20px;height:40px;
-    background:var(--bg);
-    top:105px;
-    transition:background .25s ease;
-}
-.ticket::before{
-    left:0;
-    border-radius:0 20px 20px 0;
-}
-.ticket::after{
-    right:0;
-    border-radius:20px 0 0 20px;
-}
-  @media (max-width:860px){ .ticket::before,.ticket::after{display:none;} }
-
   /* ---------- STUB HEAD ----------
      RIGHT-SIDE PLACEMENT: title ("TICKET #0001" / "Top") sits on the
      LEFT, and the badges group (pill + stamp + subtitle) sits on the
-     RIGHT, side by side, at every screen size — this is a row layout
-     (not stacked), matching how it looked before. On narrow phones
-     where both can't fit on one line, .stub-head wraps and the badges
-     group drops to its own row but stays RIGHT-aligned (not left),
-     via justify-content:flex-end, so it visually stays on "the right
-     side" even when stacked. */
+     RIGHT, side by side, at every screen size.
+
+     NOTCH ALIGNMENT FIX: the die-cut "bite" notches were previously
+     children of .ticket with a hardcoded top:105px — that only lined
+     up with the dashed border when the header was always exactly the
+     same height. Now that the badges group can wrap onto a second row
+     (making the header taller or shorter depending on content), a
+     fixed pixel offset no longer matches the border's real position.
+
+     Fix: the notches are now pseudo-elements of .stub-head itself
+     (position:relative), positioned with `bottom:-20px` — i.e. exactly
+     half their own 40px height below stub-head's OWN bottom edge, which
+     is precisely where the dashed border-bottom sits. This means the
+     notch is always perfectly centered on the dashed line no matter how
+     tall or short the header ends up being — no fixed pixel guess. */
   .stub-head{
     display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
     flex-wrap:wrap;
     gap:14px;
     padding:24px 30px 18px;
     border-bottom:2px dashed var(--line);
+    position:relative;
   }
   @media (max-width:640px){ .stub-head{padding:18px 18px 14px;gap:10px;} }
   @media (max-width:360px){ .stub-head{padding:16px 14px 12px;} }
   .stub-head .num{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:11.5px;}
   .stub-head h2{font-size:clamp(20px,3.6vw,28px);margin-top:5px;}
+
+  /* die-cut stub notches — subtle half-circle "bite" that always sits
+     centered on the dashed line, regardless of header height */
+  .stub-head::before,.stub-head::after{
+    content:"";position:absolute;
+    width:20px;height:40px;
+    background:var(--bg);
+    bottom:-20px; /* half of the 40px height — centers it exactly on the border-bottom line */
+    transition:background .25s ease;
+    z-index:1;
+  }
+  .stub-head::before{
+    left:-30px; /* offsets by the ticket's own side padding so the notch sits flush with the card edge */
+    border-radius:0 20px 20px 0;
+  }
+  .stub-head::after{
+    right:-30px;
+    border-radius:20px 0 0 20px;
+  }
+  @media (max-width:860px){ .stub-head::before,.stub-head::after{display:none;} }
 
   .stamp{
     font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
@@ -163,13 +174,7 @@
     .stamp{font-size:8px;padding:5px 9px;gap:3px;}
   }
 
-  /* ---------- View counter chip ----------
-     .stub-head-badges is the whole right-hand group. It's given
-     margin-left:auto so it pushes to the RIGHT edge of the row while
-     the title stays flush LEFT — this is what places it "on the right
-     side under Top" as requested. When the row wraps on narrow
-     screens, justify-content:flex-end keeps the badges group aligned
-     to the right rather than snapping back to the left. */
+  /* ---------- View counter chip ---------- */
   .stub-head-badges{
     display:flex;align-items:center;flex-wrap:wrap;
     justify-content:flex-end;
@@ -182,7 +187,7 @@
     .stub-head-badges{
         width:100%;
         margin-left:0;
-        justify-content:flex-end; /* stays right-aligned even stacked below the title on mobile */
+        justify-content:flex-end;
         gap:8px;row-gap:7px;
     }
   }
@@ -284,9 +289,7 @@
     .view-chip-count,.view-chip-label{font-size:18px;}
   }
 
-  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
-     always its own full row beneath the pill+stamp row, RIGHT-aligned
-     to match the badges group above it. */
+  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" */
   .view-chip-sub{
     display:flex;align-items:center;flex-wrap:wrap;
     justify-content:flex-end;
