@@ -170,8 +170,8 @@
     border-bottom:2px dashed var(--line);
     position:relative;
   }
-  @media (max-width:640px){ .stub-head{padding:18px 18px 14px;gap:10px;} }
-  @media (max-width:360px){ .stub-head{padding:16px 14px 12px;} }
+  @media (max-width:640px){ .stub-head{--stub-pad-x:18px;padding:18px var(--stub-pad-x) 14px;gap:10px;} }
+  @media (max-width:360px){ .stub-head{--stub-pad-x:14px;padding:16px var(--stub-pad-x) 12px;} }
   .stub-head .num{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:11.5px;}
   .stub-head h2{font-size:clamp(20px,3.6vw,28px);margin-top:5px;}
 
@@ -193,7 +193,7 @@
     right:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:20px 0 0 20px;
   }
-  @media (max-width:860px){ .stub-head::before,.stub-head::after{display:none;} }
+
 
   .stamp{
     font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
