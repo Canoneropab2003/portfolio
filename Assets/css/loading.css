@@ -12,9 +12,27 @@
    screen readers. See the matching loading.js for markup + copy.
 
    This pass:
+   - NOTCH FIX: the die-cut notches were pinned to top:50% of the *entire*
+     .pl-ticket card, not to the dashed .pl-divider line, so they only
+     looked centered on the line by coincidence (whenever the content
+     above/below happened to balance out evenly). They're now attached
+     directly to .pl-divider and measured against its own 1px box, so
+     they sit exactly on the dashed line regardless of how tall anything
+     above or below it is. A shared --pl-pad-x custom property keeps the
+     notch's outward offset in sync with the ticket's own padding, since
+     .pl-divider sits inside that padding while the notch needs to reach
+     the card's actual outer edge.
+   - FULLY RESPONSIVE: every size that used to be a fixed px value (card
+     width, padding, token size, notch size, type sizes) now scales with
+     clamp() between a small-phone floor and a desktop ceiling, so the
+     ticket reads correctly from ~320px phones up through large desktop
+     monitors without any single fixed breakpoint doing all the work.
+     A couple of extra breakpoints handle the very smallest phones and
+     larger tablet/desktop canvases where clamp() alone isn't quite
+     enough (e.g. keeping the notch from clipping the card's corner
+     radius at the smallest sizes).
    - aligns border-radius/shadow with the real var(--radius)/var(--shadow)
-     tokens, and switches the notches to the flush "bite" style your
-     .ticket component actually uses now (not the old bulging circles)
+     tokens
    - swaps a few fixed navy shadows for neutral black ones, since your
      --shadow token itself goes pure black in dark mode
    - REMOVED the old .app{opacity:0}/page-reveal trick: it was hiding the
@@ -53,6 +71,11 @@ html.is-loading body{
   display:flex;
   align-items:center;
   justify-content:center;
+  /* small side gutter so the card never touches the viewport edge on
+     narrow phones, and never looks like it's floating loose on very
+     wide desktop canvases */
+  padding:16px;
+  box-sizing:border-box;
   perspective:1400px;
   background:
     radial-gradient(60% 50% at 50% 36%, color-mix(in srgb, var(--accent, #2F5DE0) 9%, transparent), transparent 70%),
@@ -74,10 +97,20 @@ html.is-loading body{
 }
 
 /* the ticket stub — dispensed from a slot above, tilting flat in 3D as it
-   lands (transform-origin sits at the top edge, like a hinge at the slot) */
+   lands (transform-origin sits at the top edge, like a hinge at the slot).
+
+   Sizing tokens below scale fluidly with clamp(): a fixed floor so text
+   and the token never get too cramped on the smallest phones, a vw-based
+   middle so it feels proportional across tablets, and a fixed ceiling so
+   the card doesn't sprawl on large desktop monitors. */
 .pl-ticket{
+  --pl-pad-x: clamp(20px, 6vw, 30px);
+  --pl-pad-top: clamp(24px, 7vw, 34px);
+  --pl-pad-bottom: clamp(18px, 5vw, 26px);
+
   position:relative;
-  width:min(300px, 84vw);
+  width:clamp(240px, 84vw, 300px);
+  max-width:100%;
   transform-style:preserve-3d;
   transform-origin:top center;
   will-change:transform, opacity;
@@ -87,7 +120,7 @@ html.is-loading body{
   border:1px solid color-mix(in srgb, var(--line, #DCE2ED) 70%, transparent);
   border-radius:var(--radius, 16px);
   box-shadow:var(--shadow, 0 1px 2px rgba(18,33,61,.04), 0 20px 48px rgba(18,33,61,.09)), 0 30px 60px -16px rgba(0,0,0,.22);
-  padding:34px 30px 26px;
+  padding:var(--pl-pad-top) var(--pl-pad-x) var(--pl-pad-bottom);
   text-align:center;
   animation:pl-dispense .7s cubic-bezier(.22,.75,.28,1) both;
 }
@@ -107,27 +140,6 @@ html.is-loading body{
   animation:pl-scan .68s ease-out .12s both;
 }
 
-/* die-cut stub notches — flush "bite" cutouts matching the real .ticket
-   component in style.css (not the old bulging-circle style) */
-.pl-ticket::before,
-.pl-ticket::after{
-  content:"";
-  position:absolute;
-  width:16px;
-  height:34px;
-  top:50%;
-  transform:translateY(-50%);
-  background:var(--bg, #E9EDF5);
-}
-.pl-ticket::before{
-  left:0;
-  border-radius:0 17px 17px 0;
-}
-.pl-ticket::after{
-  right:0;
-  border-radius:17px 0 0 17px;
-}
-
 .pl-brand{
   display:flex;
   align-items:center;
@@ -135,10 +147,10 @@ html.is-loading body{
   gap:8px;
   font-family:'Sora', sans-serif;
   font-weight:800;
-  font-size:14.5px;
+  font-size:clamp(12.5px, 3.4vw, 14.5px);
   letter-spacing:.03em;
   color:var(--ink, #12213D);
-  margin-bottom:22px;
+  margin-bottom:clamp(16px, 4vw, 22px);
 }
 .pl-brand .pl-dot{
   width:7px;
@@ -153,9 +165,9 @@ html.is-loading body{
 
 .pl-ring-wrap{
   position:relative;
-  width:76px;
-  height:76px;
-  margin:0 auto 20px;
+  width:clamp(56px, 18vw, 76px);
+  height:clamp(56px, 18vw, 76px);
+  margin:0 auto clamp(14px, 4vw, 20px);
   perspective:320px;
   filter:drop-shadow(0 10px 12px rgba(0,0,0,.18));
 }
@@ -168,11 +180,12 @@ html.is-loading body{
   border:2px solid var(--line, #DCE2ED);
   opacity:.6;
 }
-/* faint ambient glow behind the token */
+/* faint ambient glow behind the token — inset scales as a % so it stays
+   proportional as the token itself shrinks/grows */
 .pl-ring-wrap::after{
   content:"";
   position:absolute;
-  inset:14px;
+  inset:18%;
   border-radius:50%;
   background:radial-gradient(circle, color-mix(in srgb, var(--accent, #2F5DE0) 30%, transparent), transparent 72%);
   filter:blur(5px);
@@ -180,7 +193,7 @@ html.is-loading body{
 
 .pl-ring{
   position:absolute;
-  inset:8px;
+  inset:10%;
   border-radius:50%;
   transform-style:preserve-3d;
   will-change:transform;
@@ -236,24 +249,54 @@ html.is-loading body{
 
 .pl-status{
   font-family:'IBM Plex Mono', monospace;
-  font-size:11.5px;
+  font-size:clamp(10px, 2.6vw, 11.5px);
   letter-spacing:.09em;
   text-transform:uppercase;
   color:var(--muted, #5C6B84);
-  margin-bottom:16px;
+  margin-bottom:clamp(12px, 3.2vw, 16px);
   min-height:1.2em;
   transition:opacity .22s ease;
 }
 .pl-status.is-swapping{ opacity:0; }
 
-/* perforated stub divider — small round dots, reads like a tear line */
+/* perforated stub divider — small round dots, reads like a tear line.
+   position:relative makes this the containing block for the notches
+   below, so they measure against *this* element's own vertical center
+   instead of the whole card's. */
 .pl-divider{
+  position:relative;
   height:1px;
-  margin:0 0 18px;
+  margin:0 0 clamp(14px, 3.6vw, 18px);
   background-image:linear-gradient(90deg, var(--line, #DCE2ED) 45%, transparent 0%);
   background-position:top;
   background-size:8px 1px;
   background-repeat:repeat-x;
+}
+
+/* die-cut stub notches — attached to .pl-divider (the dashed line) instead
+   of .pl-ticket, so they're guaranteed to sit exactly on the dashed line
+   regardless of how tall the content above/below happens to be. The
+   negative left/right offsets walk back out through .pl-ticket's own
+   padding (--pl-pad-x) to reach the card's actual outer edge. Notch size
+   also scales down on small screens so it can't clip the card's corner
+   radius when the ticket itself is small. */
+.pl-divider::before,
+.pl-divider::after{
+  content:"";
+  position:absolute;
+  width:clamp(12px, 4vw, 16px);
+  height:clamp(26px, 8vw, 34px);
+  top:50%;
+  transform:translateY(-50%);
+  background:var(--bg, #E9EDF5);
+}
+.pl-divider::before{
+  left:calc(-1 * var(--pl-pad-x));
+  border-radius:0 17px 17px 0;
+}
+.pl-divider::after{
+  right:calc(-1 * var(--pl-pad-x));
+  border-radius:17px 0 0 17px;
 }
 
 .pl-progress-row{
@@ -294,7 +337,7 @@ html.is-loading body{
 
 .pl-pct{
   font-family:'IBM Plex Mono', monospace;
-  font-size:12.5px;
+  font-size:clamp(11px, 2.8vw, 12.5px);
   font-weight:600;
   font-variant-numeric:tabular-nums;
   color:var(--ink, #12213D);
@@ -308,8 +351,8 @@ html.is-loading body{
    each end) are what make it read as a barcode rather than static. */
 .pl-barcode{
   position:relative;
-  height:18px;
-  margin-top:18px;
+  height:clamp(14px, 4vw, 18px);
+  margin-top:clamp(14px, 3.6vw, 18px);
   opacity:.45;
   background-image:
     repeating-linear-gradient(90deg, var(--ink, #12213D) 0 1px, transparent 1px 3px),
@@ -360,6 +403,36 @@ html.is-loading body{
   25%{ transform:rotateX(-6deg) translateY(2px) translateZ(0); opacity:1; }
   100%{ transform:rotateX(58deg) translateY(-14px) translateZ(-70px); opacity:0; }
 }
+
+/* ---- extra breakpoints where clamp() alone needs a small assist ---- */
+
+/* very small phones (iPhone SE / older Android, ~320–359px wide): tighten
+   the perspective a touch so the 3D dispense tilt doesn't feel exaggerated
+   on a card this narrow, and nudge the barcode margin down further so the
+   card doesn't feel taller than it needs to be on short viewports. */
+@media (max-width:359px){
+  #preloader{ perspective:1000px; }
+  .pl-barcode{ margin-top:12px; }
+}
+
+/* tablets and small laptops: let the card breathe a little more since
+   84vw would otherwise make it feel small relative to the surrounding
+   whitespace at this size; the clamp ceiling (300px) already caps it, so
+   this just tightens how quickly it approaches that ceiling. */
+@media (min-width:600px){
+  .pl-ticket{ width:min(320px, 46vw); }
+}
+
+/* large laptop / desktop: fix the card at its natural size and stop it
+   scaling with viewport width at all, since at this size vw-based sizing
+   starts to feel arbitrary rather than responsive. */
+@media (min-width:1024px){
+  .pl-ticket{ width:320px; }
+}
+
+/* also cap how large the surrounding page can push things on ultra-wide
+   monitors — #preloader is already centered via flexbox, so nothing else
+   needs to change here beyond the card's own fixed width above. */
 
 @media (prefers-reduced-motion: reduce){
   .pl-ring{ animation:none; transform:rotateX(14deg) rotateY(28deg); }
