@@ -137,11 +137,36 @@
      part of the notch, i.e. it still read as a disconnected floating
      circle. Anchoring flush at 0 removes any ambiguity: the notch's
      edge touches the card's edge with zero gap, guaranteed.) */
+  /* ---------- STUB HEAD ----------
+     RIGHT-SIDE PLACEMENT: title ("TICKET #0001" / "Top") sits on the
+     LEFT, and the badges group (pill + stamp + subtitle) sits on the
+     RIGHT, side by side, at every screen size.
+
+     NOTCH ALIGNMENT: the die-cut "bite" notches are pseudo-elements of
+     .stub-head itself (position:relative), positioned with
+     `bottom:-20px` — i.e. exactly half their own 40px height below
+     stub-head's OWN bottom edge, which is precisely where the dashed
+     border-bottom sits. This is verified correct: the notch stays
+     perfectly centered on the dashed line no matter how tall or short
+     the header ends up being.
+
+     Horizontally, `left`/`right` on an absolutely positioned
+     pseudo-element are measured from stub-head's PADDING edge, not
+     its outer/visual edge — and stub-head has 30px of left/right
+     padding (--stub-pad-x below). Left at `0` therefore lands the
+     notch 30px inside the card's true edge, which is exactly the
+     "detached floating circle" gap seen in testing. Offsetting by
+     `-1 * --stub-pad-x` cancels that padding out, so the notch's flat
+     side actually touches the card's visual edge with zero gap,
+     regardless of how much padding stub-head has. --stub-pad-x is
+     shared with the padding declaration below so the two can never
+     drift out of sync again. */
   .stub-head{
+    --stub-pad-x:30px;
     display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
     flex-wrap:wrap;
     gap:14px;
-    padding:24px 30px 18px;
+    padding:24px var(--stub-pad-x) 18px;
     border-bottom:2px dashed var(--line);
     position:relative;
   }
@@ -161,11 +186,11 @@
     z-index:1;
   }
   .stub-head::before{
-    left:0; /* flush against the card's left edge — zero gap, bulge curves inward */
+    left:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:0 20px 20px 0;
   }
   .stub-head::after{
-    right:0; /* flush against the card's right edge — zero gap, bulge curves inward */
+    right:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:20px 0 0 20px;
   }
   @media (max-width:860px){ .stub-head::before,.stub-head::after{display:none;} }
