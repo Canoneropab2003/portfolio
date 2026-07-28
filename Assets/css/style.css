@@ -119,21 +119,30 @@
 }
   @media (max-width:860px){ .ticket::before,.ticket::after{display:none;} }
 
+  /* ---------- STUB HEAD ----------
+     LEFT-ALIGNMENT FIX: .stub-head is now ALWAYS flex-direction:column
+     at every screen size — the title block ("TICKET #0001" / "Top")
+     sits on top, and the badges row (pill + stamp + subtitle) sits
+     directly beneath it, both flush to the same left edge. This
+     matches the layout your screenshots already show and keeps it
+     consistent from mobile through desktop, instead of switching
+     between a side-by-side layout on wide screens and a stacked one
+     on narrow screens (which caused inconsistent alignment). */
   .stub-head{
-    display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+    display:flex;flex-direction:column;align-items:flex-start;
+    gap:14px;
     padding:24px 30px 18px;
     border-bottom:2px dashed var(--line);
-    flex-wrap:wrap;
-    max-width:100%;
   }
-  @media (max-width:640px){ .stub-head{padding:18px 18px 14px;flex-direction:column;gap:10px;} }
+  @media (max-width:640px){ .stub-head{padding:18px 18px 14px;gap:10px;} }
   @media (max-width:360px){ .stub-head{padding:16px 14px 12px;} }
   .stub-head .num{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:11.5px;}
   .stub-head h2{font-size:clamp(20px,3.6vw,28px);margin-top:5px;}
+
   .stamp{
     font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;
     border:2px solid currentColor;border-radius:7px;
-    padding:5px 10px;transform:rotate(-6deg);
+    padding:8px 12px; /* padding matched to .view-chip so both sit on the same visual baseline */
     display:inline-flex;align-items:center;gap:5px;
     letter-spacing:.05em;
     flex-shrink:0;
@@ -144,48 +153,42 @@
   .stamp.progress{color:var(--warn);}
   .stamp .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
   @media (max-width:640px){
-    .stamp{font-size:9.5px;padding:5px 9px;gap:4px;}
+    .stamp{font-size:9.5px;padding:7px 11px;gap:4px;}
   }
   @media (max-width:440px){
-    .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;}
+    .stamp{font-size:9px;padding:6px 10px;gap:4px;}
   }
   @media (max-width:360px){
-    .stamp{font-size:8px;padding:4px 7px;gap:3px;}
+    .stamp{font-size:8px;padding:5px 9px;gap:3px;}
   }
 
   /* ---------- View counter chip ----------
-     LAYOUT FIX: the pill (.view-chip) and the "OPEN TO WORK" stamp
-     (.stamp) are now LOCKED onto the same first row via explicit
-     `order` values (1 and 2) plus `flex-shrink:0` — they always sit
-     side by side at every screen size, from the smallest phone to
-     desktop, and never trigger horizontal scrolling since both are
-     compact by design.
-
-     The subtitle group (.view-chip-sub: "Since HH:MM Today" + delta
-     badge) is given `order:3` and `flex-basis:100%` — this FORCES it
-     onto its own second row every time, regardless of available width,
-     instead of competing with the pill/stamp for row-one space. That's
-     what keeps "views" + "OPEN TO WORK" reliably side by side without
-     ever needing to shrink them into an overflow situation. */
+     Pill (.view-chip) and stamp (.stamp) are locked onto the same first
+     row via `order` and both use MATCHING vertical padding so their tops
+     and bottoms line up cleanly (no more one looking taller/shorter
+     than the other). The whole badges row is explicitly left-aligned
+     with justify-content:flex-start at EVERY breakpoint — it never
+     stretches, centers, or spreads apart, matching the title above it. */
   .stub-head-badges{
     display:flex;align-items:center;flex-wrap:wrap;
-    gap:8px;
-    row-gap:6px;
+    justify-content:flex-start;
+    gap:10px;
+    row-gap:8px;
     width:100%;
     min-width:0;
     max-width:100%;
   }
   @media (max-width:640px){
-    .stub-head-badges{gap:7px;}
+    .stub-head-badges{gap:8px;row-gap:7px;}
   }
   @media (max-width:360px){
-    .stub-head-badges{gap:5px;}
+    .stub-head-badges{gap:6px;row-gap:6px;}
   }
 
   .view-chip{
     position:relative;
     display:inline-flex;align-items:center;gap:7px;
-    padding:8px 16px;
+    padding:8px 16px; /* matches .stamp's vertical padding for a shared baseline */
     border-radius:999px;
     background:linear-gradient(135deg, var(--accent-soft), var(--surface));
     color:var(--ink);
@@ -193,7 +196,7 @@
     white-space:nowrap;
     isolation:isolate;
     cursor:pointer;
-    flex-shrink:0; /* never shrinks below natural content size — prevents clipped digits */
+    flex-shrink:0;
     max-width:100%;
     order:1; /* first item on row one */
     transition:transform .18s ease, box-shadow .18s ease;
@@ -277,11 +280,12 @@
   }
 
   /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
-     always its OWN full row, below the pill+stamp row, at every screen
-     size (order:3 + flex-basis:100%). Never competes with them for
-     space, so the pill and stamp are guaranteed to stay side by side. */
+     always its own full row beneath the pill+stamp row, left-aligned
+     to match everything above it. */
   .view-chip-sub{
-    display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+    display:flex;align-items:center;flex-wrap:wrap;
+    justify-content:flex-start;
+    gap:6px;
     order:3;
     flex:1 1 100%;
     min-width:0;
