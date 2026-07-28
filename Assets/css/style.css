@@ -124,17 +124,19 @@
      stub-head's OWN bottom edge, which is precisely where the dashed
      border-bottom sits. This means the notch is always perfectly
      centered on the dashed line no matter how tall or short the header
-     ends up being — no fixed pixel guess.
+     ends up being — no fixed pixel guess. (Verified against a real
+     render: this vertical centering is correct as-is.)
 
-     Horizontally, the 20px-wide notch is centered ON stub-head's own
-     left/right edge (which lines up with the ticket's outer edge)
-     using `left:-10px` / `right:-10px` — half the notch sits inside
-     the card, half sits outside, so it reads as a bite taken out of
-     the edge. (Previously this used -30px, which is stub-head's own
-     padding value and has nothing to do with the card's outer edge —
-     that pushed the whole notch fully outside the card with a gap
-     before the edge, showing up as a disconnected floating circle
-     instead of a seamless bite.) */
+     Horizontally, the 20px-wide notch is anchored flush at
+     `left:0` / `right:0` — i.e. its flat (non-rounded) side sits
+     EXACTLY on stub-head's own left/right edge, which lines up with
+     the ticket's outer edge, with the rounded bulge curving inward
+     into the card. (Previously this used a negative value intended to
+     have the notch straddle the edge half-in/half-out — but that left
+     a visible gap of white card between the true edge and the visible
+     part of the notch, i.e. it still read as a disconnected floating
+     circle. Anchoring flush at 0 removes any ambiguity: the notch's
+     edge touches the card's edge with zero gap, guaranteed.) */
   .stub-head{
     display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
     flex-wrap:wrap;
@@ -159,11 +161,11 @@
     z-index:1;
   }
   .stub-head::before{
-    left:-10px; /* straddles the card's left edge: half in, half out */
+    left:0; /* flush against the card's left edge — zero gap, bulge curves inward */
     border-radius:0 20px 20px 0;
   }
   .stub-head::after{
-    right:-10px; /* straddles the card's right edge: half in, half out */
+    right:0; /* flush against the card's right edge — zero gap, bulge curves inward */
     border-radius:20px 0 0 20px;
   }
   @media (max-width:860px){ .stub-head::before,.stub-head::after{display:none;} }
