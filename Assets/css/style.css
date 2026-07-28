@@ -36,10 +36,7 @@
   *{box-sizing:border-box;}
 
   /* SAFETY NET: prevents ANY element anywhere on the page from ever
-     creating a horizontal scrollbar, no matter what content or future
-     edits are added. This is the fix for the "have to scroll left/right"
-     issue — it was caused by flex-wrap:nowrap forcing the ticket header
-     row to stay wider than the viewport on narrow phones. */
+     creating a horizontal scrollbar. */
   html,body{
     overflow-x:hidden;
     max-width:100%;
@@ -94,7 +91,7 @@
     box-shadow:var(--shadow);
     position:relative;
     display:none;
-    overflow-x:hidden; /* extra safety: clips anything that would still overflow */
+    overflow-x:hidden;
     transition:background .25s ease, box-shadow .25s ease;
   }
   @media (min-width:1600px){
@@ -141,6 +138,7 @@
     letter-spacing:.05em;
     flex-shrink:0;
     white-space:nowrap;
+    order:2; /* sits right after the pill on row one */
   }
   .stamp.open{color:var(--ok);}
   .stamp.progress{color:var(--warn);}
@@ -156,22 +154,23 @@
   }
 
   /* ---------- View counter chip ----------
-     FIX FOR HORIZONTAL SCROLL: .stub-head-badges previously forced
-     flex-wrap:nowrap at every screen size, which meant the pill +
-     subtitle + stamp had to squeeze into ONE row no matter how narrow
-     the phone was — once they couldn't shrink any further, the row
-     pushed past the viewport edge and created a horizontal scrollbar.
+     LAYOUT FIX: the pill (.view-chip) and the "OPEN TO WORK" stamp
+     (.stamp) are now LOCKED onto the same first row via explicit
+     `order` values (1 and 2) plus `flex-shrink:0` — they always sit
+     side by side at every screen size, from the smallest phone to
+     desktop, and never trigger horizontal scrolling since both are
+     compact by design.
 
-     Now: the row stays side-by-side (nowrap) on tablets/larger phones
-     where there's enough room, but switches to flex-wrap:wrap below
-     480px so on the narrowest phones the "Since / New today" subtitle
-     and the "OPEN TO WORK" stamp can drop to a second line instead of
-     forcing the page wider than the screen. Nothing ever gets cut off
-     or requires scrolling — it just reflows. */
+     The subtitle group (.view-chip-sub: "Since HH:MM Today" + delta
+     badge) is given `order:3` and `flex-basis:100%` — this FORCES it
+     onto its own second row every time, regardless of available width,
+     instead of competing with the pill/stamp for row-one space. That's
+     what keeps "views" + "OPEN TO WORK" reliably side by side without
+     ever needing to shrink them into an overflow situation. */
   .stub-head-badges{
-    display:flex;align-items:center;
+    display:flex;align-items:center;flex-wrap:wrap;
     gap:8px;
-    flex-wrap:nowrap;
+    row-gap:6px;
     width:100%;
     min-width:0;
     max-width:100%;
@@ -179,14 +178,8 @@
   @media (max-width:640px){
     .stub-head-badges{gap:7px;}
   }
-  @media (max-width:480px){
-    .stub-head-badges{
-        flex-wrap:wrap;
-        row-gap:6px;
-    }
-  }
   @media (max-width:360px){
-    .stub-head-badges{gap:4px;}
+    .stub-head-badges{gap:5px;}
   }
 
   .view-chip{
@@ -202,6 +195,7 @@
     cursor:pointer;
     flex-shrink:0; /* never shrinks below natural content size — prevents clipped digits */
     max-width:100%;
+    order:1; /* first item on row one */
     transition:transform .18s ease, box-shadow .18s ease;
   }
 
@@ -266,9 +260,6 @@
     .view-chip{padding:7px 14px;gap:6px;}
     .view-chip-icon{width:14px;height:14px;}
   }
-  @media (max-width:480px){
-    .view-chip{flex:1 1 100%;} /* pill takes the full first row so the subtitle/stamp wrap cleanly below */
-  }
   @media (max-width:440px){
     .view-chip{padding:6px 13px;gap:5px;}
     .view-chip-icon{width:13px;height:13px;}
@@ -285,15 +276,15 @@
     .view-chip-count,.view-chip-label{font-size:18px;}
   }
 
-  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" */
+  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
+     always its OWN full row, below the pill+stamp row, at every screen
+     size (order:3 + flex-basis:100%). Never competes with them for
+     space, so the pill and stamp are guaranteed to stay side by side. */
   .view-chip-sub{
-    display:flex;align-items:center;flex-wrap:wrap;gap:5px;
-    flex-shrink:1;
+    display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+    order:3;
+    flex:1 1 100%;
     min-width:0;
-    max-width:100%;
-  }
-  @media (max-width:480px){
-    .view-chip-sub{flex:1 1 auto;}
   }
 
   .view-chip-since{
