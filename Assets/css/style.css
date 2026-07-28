@@ -824,3 +824,41 @@
       scroll-behavior:auto !important;
     }
   }
+
+  /* ========================================================
+     ADDED: SOCIAL ICONS HOVER ANIMATION & STYLING
+     ======================================================== */
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    text-decoration: none;
+    margin-left: 4px; /* Slight spacing from the primary buttons */
+  }
+
+  .social-btn svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+
+  /* Hover state: background turns accent color, button lifts, and casts a shadow */
+  .social-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 18px rgba(47, 93, 224, 0.25);
+  }
+
+  /* Inner SVG pop animation: scales up and slightly tilts on hover */
+  .social-btn:hover svg {
+    transform: scale(1.15) rotate(5deg);
+  }
