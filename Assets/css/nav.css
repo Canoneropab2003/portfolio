@@ -13,6 +13,12 @@
    translateZ), not flat tricks. One signature moment (the brand
    mark) is genuinely playful; everything else is quieter
    supporting motion. All of it respects prefers-reduced-motion.
+
+   STICKY NOTE: this sidebar relies on position:sticky (below) to
+   stay pinned while the page scrolls. That only works correctly
+   if none of its ancestors (html, body, .app) create their own
+   competing scroll container — see the fix in style.css's
+   html/body overflow-x rule if the nav ever stops sticking again.
    ========================================================== */
 
 .nav{
