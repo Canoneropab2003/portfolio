@@ -34,6 +34,17 @@
     color-scheme:dark;
   }
   *{box-sizing:border-box;}
+
+  /* SAFETY NET: prevents ANY element anywhere on the page from ever
+     creating a horizontal scrollbar, no matter what content or future
+     edits are added. This is the fix for the "have to scroll left/right"
+     issue — it was caused by flex-wrap:nowrap forcing the ticket header
+     row to stay wider than the viewport on narrow phones. */
+  html,body{
+    overflow-x:hidden;
+    max-width:100%;
+  }
+
   body{
     margin:0;
     background:var(--bg);
@@ -54,6 +65,7 @@
     display:grid;
     grid-template-columns:236px 1fr;
     min-height:100vh;
+    max-width:100%;
   }
   @media (max-width:860px){ .app{grid-template-columns:1fr;} }
 
@@ -68,6 +80,7 @@
   .stage{
     padding:44px 28px 90px;
     display:flex;justify-content:center;
+    max-width:100%;
   }
   @media (max-width:860px){ .stage{padding:26px 14px 70px;} }
   @media (min-width:1600px){
@@ -81,6 +94,7 @@
     box-shadow:var(--shadow);
     position:relative;
     display:none;
+    overflow-x:hidden; /* extra safety: clips anything that would still overflow */
     transition:background .25s ease, box-shadow .25s ease;
   }
   @media (min-width:1600px){
@@ -113,6 +127,7 @@
     padding:24px 30px 18px;
     border-bottom:2px dashed var(--line);
     flex-wrap:wrap;
+    max-width:100%;
   }
   @media (max-width:640px){ .stub-head{padding:18px 18px 14px;flex-direction:column;gap:10px;} }
   @media (max-width:360px){ .stub-head{padding:16px 14px 12px;} }
@@ -133,10 +148,6 @@
   @media (max-width:640px){
     .stamp{font-size:9.5px;padding:5px 9px;gap:4px;}
   }
-  /* NEW: dedicated tier for common modern phones (iPhone 12/13/14, XR,
-     most Android flagships — roughly 390–440px wide). These previously
-     fell into the same ultra-compact 480px rule as the iPhone SE, even
-     though they have noticeably more room to work with. */
   @media (max-width:440px){
     .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;}
   }
@@ -145,31 +156,34 @@
   }
 
   /* ---------- View counter chip ----------
-     Compact glassmorphic "views" pill: bold count, trending-up icon,
-     gradient glow ring. .stub-head-badges is a FLAT flex container with
-     THREE direct children: the pill (.view-chip), the subtitle group
-     (.view-chip-sub: "Since HH:MM Today" + delta badge), and the
-     "OPEN TO WORK" stamp (.stamp) — always side by side, never wrapping.
+     FIX FOR HORIZONTAL SCROLL: .stub-head-badges previously forced
+     flex-wrap:nowrap at every screen size, which meant the pill +
+     subtitle + stamp had to squeeze into ONE row no matter how narrow
+     the phone was — once they couldn't shrink any further, the row
+     pushed past the viewport edge and created a horizontal scrollbar.
 
-     SIZE TIERS (mobile phones now scale in THREE steps instead of two,
-     so mid-size phones aren't squeezed down to the same size as the
-     smallest ones):
-       > 640px  — tablets/small laptops in portrait
-       ≤ 640px  — larger phones (phablets, landscape phones)
-       ≤ 440px  — most modern phones: iPhone 12/13/14, XR, Pixel, Galaxy S (NEW TIER)
-       ≤ 360px  — smallest phones: iPhone SE, older/compact Android */
+     Now: the row stays side-by-side (nowrap) on tablets/larger phones
+     where there's enough room, but switches to flex-wrap:wrap below
+     480px so on the narrowest phones the "Since / New today" subtitle
+     and the "OPEN TO WORK" stamp can drop to a second line instead of
+     forcing the page wider than the screen. Nothing ever gets cut off
+     or requires scrolling — it just reflows. */
   .stub-head-badges{
     display:flex;align-items:center;
     gap:8px;
     flex-wrap:nowrap;
     width:100%;
     min-width:0;
+    max-width:100%;
   }
   @media (max-width:640px){
     .stub-head-badges{gap:7px;}
   }
-  @media (max-width:440px){
-    .stub-head-badges{gap:6px;}
+  @media (max-width:480px){
+    .stub-head-badges{
+        flex-wrap:wrap;
+        row-gap:6px;
+    }
   }
   @media (max-width:360px){
     .stub-head-badges{gap:4px;}
@@ -187,6 +201,7 @@
     isolation:isolate;
     cursor:pointer;
     flex-shrink:0; /* never shrinks below natural content size — prevents clipped digits */
+    max-width:100%;
     transition:transform .18s ease, box-shadow .18s ease;
   }
 
@@ -251,7 +266,9 @@
     .view-chip{padding:7px 14px;gap:6px;}
     .view-chip-icon{width:14px;height:14px;}
   }
-  /* NEW TIER — iPhone 12/13/14, XR, and similar modern phones (390–440px) */
+  @media (max-width:480px){
+    .view-chip{flex:1 1 100%;} /* pill takes the full first row so the subtitle/stamp wrap cleanly below */
+  }
   @media (max-width:440px){
     .view-chip{padding:6px 13px;gap:5px;}
     .view-chip-icon{width:13px;height:13px;}
@@ -268,15 +285,15 @@
     .view-chip-count,.view-chip-label{font-size:18px;}
   }
 
-  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
-     stays in the same row as the pill and stamp at every screen size.
-     Allowed to shrink (not grow) so the row never breaks. */
+  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" */
   .view-chip-sub{
-    display:flex;align-items:center;gap:5px;
+    display:flex;align-items:center;flex-wrap:wrap;gap:5px;
     flex-shrink:1;
     min-width:0;
-    white-space:nowrap;
-    overflow:hidden;
+    max-width:100%;
+  }
+  @media (max-width:480px){
+    .view-chip-sub{flex:1 1 auto;}
   }
 
   .view-chip-since{
@@ -312,14 +329,13 @@
     .view-chip-since{font-size:9.5px;}
     .view-chip-delta{font-size:9.5px;padding:2px 7px;}
   }
-  /* NEW TIER — iPhone 12/13/14, XR, and similar modern phones (390–440px) */
   @media (max-width:440px){
     .view-chip-since{font-size:9px;}
     .view-chip-delta{font-size:9px;padding:2px 6px;}
   }
   @media (max-width:360px){
-    .view-chip-since{font-size:7.5px;max-width:60px;}
-    .view-chip-delta{font-size:7.5px;padding:1px 5px;}
+    .view-chip-since{font-size:8px;}
+    .view-chip-delta{font-size:8px;padding:2px 6px;}
   }
   @media (min-width:1600px){
     .view-chip-since,.view-chip-delta{font-size:11px;}
@@ -329,7 +345,7 @@
   @media (max-width:640px){ .stub-body{padding:22px 20px 30px;} }
 
   /* ---------- content bits ---------- */
-  .hero-flex{display:flex;gap:40px;align-items:center;justify-content:space-between;flex-wrap:wrap;}
+  .hero-flex{display:flex;gap:40px;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:100%;}
   .hero-text{flex:1 1 340px;min-width:0;}
   .hero-photo-wrap{
     position:relative;flex:0 0 auto;cursor:pointer;
