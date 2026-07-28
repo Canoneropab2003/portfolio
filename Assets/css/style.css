@@ -130,11 +130,18 @@
   .stamp.open{color:var(--ok);}
   .stamp.progress{color:var(--warn);}
   .stamp .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-  @media (max-width:480px){
-    .stamp{font-size:8px;padding:3px 7px;transform:rotate(-4deg);gap:3px;}
+  @media (max-width:640px){
+    .stamp{font-size:9.5px;padding:5px 9px;gap:4px;}
+  }
+  /* NEW: dedicated tier for common modern phones (iPhone 12/13/14, XR,
+     most Android flagships — roughly 390–440px wide). These previously
+     fell into the same ultra-compact 480px rule as the iPhone SE, even
+     though they have noticeably more room to work with. */
+  @media (max-width:440px){
+    .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;}
   }
   @media (max-width:360px){
-    .stamp{font-size:7px;padding:3px 6px;gap:2px;}
+    .stamp{font-size:8px;padding:4px 7px;gap:3px;}
   }
 
   /* ---------- View counter chip ----------
@@ -142,16 +149,15 @@
      gradient glow ring. .stub-head-badges is a FLAT flex container with
      THREE direct children: the pill (.view-chip), the subtitle group
      (.view-chip-sub: "Since HH:MM Today" + delta badge), and the
-     "OPEN TO WORK" stamp (.stamp).
+     "OPEN TO WORK" stamp (.stamp) — always side by side, never wrapping.
 
-     FIX: previously .view-chip forced itself onto its own full-width
-     row below 640px, pushing the subtitle + stamp to a second line.
-     That's removed — flex-wrap:nowrap now applies at EVERY screen
-     size, matching the desktop layout, so the pill + "Since ... New
-     today" + stamp always sit side by side in one row, even on the
-     smallest phones. To make that fit in ~343px of usable width on an
-     iPhone SE, every piece shrinks its font-size/padding further at the
-     narrow breakpoints below than before. */
+     SIZE TIERS (mobile phones now scale in THREE steps instead of two,
+     so mid-size phones aren't squeezed down to the same size as the
+     smallest ones):
+       > 640px  — tablets/small laptops in portrait
+       ≤ 640px  — larger phones (phablets, landscape phones)
+       ≤ 440px  — most modern phones: iPhone 12/13/14, XR, Pixel, Galaxy S (NEW TIER)
+       ≤ 360px  — smallest phones: iPhone SE, older/compact Android */
   .stub-head-badges{
     display:flex;align-items:center;
     gap:8px;
@@ -160,10 +166,10 @@
     min-width:0;
   }
   @media (max-width:640px){
-    .stub-head-badges{gap:6px;}
+    .stub-head-badges{gap:7px;}
   }
-  @media (max-width:480px){
-    .stub-head-badges{gap:5px;}
+  @media (max-width:440px){
+    .stub-head-badges{gap:6px;}
   }
   @media (max-width:360px){
     .stub-head-badges{gap:4px;}
@@ -242,18 +248,19 @@
   }
 
   @media (max-width:640px){
-    .view-chip{padding:6px 12px;gap:5px;}
-    .view-chip-icon{width:13px;height:13px;}
+    .view-chip{padding:7px 14px;gap:6px;}
+    .view-chip-icon{width:14px;height:14px;}
   }
-  @media (max-width:480px){
-    .view-chip{padding:5px 10px;gap:4px;}
-    .view-chip-icon{width:12px;height:12px;}
-    .view-chip-count,.view-chip-label{font-size:12px;}
+  /* NEW TIER — iPhone 12/13/14, XR, and similar modern phones (390–440px) */
+  @media (max-width:440px){
+    .view-chip{padding:6px 13px;gap:5px;}
+    .view-chip-icon{width:13px;height:13px;}
+    .view-chip-count,.view-chip-label{font-size:13px;}
   }
   @media (max-width:360px){
-    .view-chip{padding:4px 8px;gap:3px;}
-    .view-chip-count,.view-chip-label{font-size:11px;}
-    .view-chip-icon{width:10px;height:10px;}
+    .view-chip{padding:5px 10px;gap:4px;}
+    .view-chip-count,.view-chip-label{font-size:11.5px;}
+    .view-chip-icon{width:11px;height:11px;}
   }
   @media (min-width:1600px){
     .view-chip{padding:9px 18px;}
@@ -301,17 +308,18 @@
   }
 
   @media (max-width:640px){
-    .view-chip-sub{gap:4px;}
-    .view-chip-since{font-size:8.5px;}
-    .view-chip-delta{font-size:8.5px;padding:2px 6px;}
+    .view-chip-sub{gap:5px;}
+    .view-chip-since{font-size:9.5px;}
+    .view-chip-delta{font-size:9.5px;padding:2px 7px;}
   }
-  @media (max-width:480px){
-    .view-chip-since{font-size:7.5px;}
-    .view-chip-delta{font-size:7.5px;padding:2px 5px;}
+  /* NEW TIER — iPhone 12/13/14, XR, and similar modern phones (390–440px) */
+  @media (max-width:440px){
+    .view-chip-since{font-size:9px;}
+    .view-chip-delta{font-size:9px;padding:2px 6px;}
   }
   @media (max-width:360px){
-    .view-chip-since{font-size:7px;max-width:60px;}
-    .view-chip-delta{font-size:7px;padding:1px 5px;}
+    .view-chip-since{font-size:7.5px;max-width:60px;}
+    .view-chip-delta{font-size:7.5px;padding:1px 5px;}
   }
   @media (min-width:1600px){
     .view-chip-since,.view-chip-delta{font-size:11px;}
