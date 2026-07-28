@@ -36,9 +36,22 @@
   *{box-sizing:border-box;}
 
   /* SAFETY NET: prevents ANY element anywhere on the page from ever
-     creating a horizontal scrollbar. */
-  html,body{
+     creating a horizontal scrollbar.
+
+     IMPORTANT: this must live on <html> ONLY, not on <body> as well.
+     Setting overflow-x:hidden on BOTH html and body forces the UA to
+     auto-convert body's overflow-y to `auto` (you can't mix `hidden`
+     on one axis with `visible` on the other), which turns <body> into
+     its own independent scroll container. That breaks every
+     position:sticky element inside it (like .nav): sticky sticks to
+     the nearest scrollable ancestor, so it locks onto body's box
+     instead of tracking the real page scroll on <html>, and just
+     scrolls away instead of staying pinned. Keeping this on html only
+     avoids creating that second, competing scroll container. */
+  html{
     overflow-x:hidden;
+  }
+  body{
     max-width:100%;
   }
 
@@ -105,19 +118,23 @@
      LEFT, and the badges group (pill + stamp + subtitle) sits on the
      RIGHT, side by side, at every screen size.
 
-     NOTCH ALIGNMENT FIX: the die-cut "bite" notches were previously
-     children of .ticket with a hardcoded top:105px — that only lined
-     up with the dashed border when the header was always exactly the
-     same height. Now that the badges group can wrap onto a second row
-     (making the header taller or shorter depending on content), a
-     fixed pixel offset no longer matches the border's real position.
+     NOTCH ALIGNMENT: the die-cut "bite" notches are pseudo-elements of
+     .stub-head itself (position:relative), positioned with
+     `bottom:-20px` — i.e. exactly half their own 40px height below
+     stub-head's OWN bottom edge, which is precisely where the dashed
+     border-bottom sits. This means the notch is always perfectly
+     centered on the dashed line no matter how tall or short the header
+     ends up being — no fixed pixel guess.
 
-     Fix: the notches are now pseudo-elements of .stub-head itself
-     (position:relative), positioned with `bottom:-20px` — i.e. exactly
-     half their own 40px height below stub-head's OWN bottom edge, which
-     is precisely where the dashed border-bottom sits. This means the
-     notch is always perfectly centered on the dashed line no matter how
-     tall or short the header ends up being — no fixed pixel guess. */
+     Horizontally, the 20px-wide notch is centered ON stub-head's own
+     left/right edge (which lines up with the ticket's outer edge)
+     using `left:-10px` / `right:-10px` — half the notch sits inside
+     the card, half sits outside, so it reads as a bite taken out of
+     the edge. (Previously this used -30px, which is stub-head's own
+     padding value and has nothing to do with the card's outer edge —
+     that pushed the whole notch fully outside the card with a gap
+     before the edge, showing up as a disconnected floating circle
+     instead of a seamless bite.) */
   .stub-head{
     display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
     flex-wrap:wrap;
@@ -142,11 +159,11 @@
     z-index:1;
   }
   .stub-head::before{
-    left:-30px; /* offsets by the ticket's own side padding so the notch sits flush with the card edge */
+    left:-10px; /* straddles the card's left edge: half in, half out */
     border-radius:0 20px 20px 0;
   }
   .stub-head::after{
-    right:-30px;
+    right:-10px; /* straddles the card's right edge: half in, half out */
     border-radius:20px 0 0 20px;
   }
   @media (max-width:860px){ .stub-head::before,.stub-head::after{display:none;} }
