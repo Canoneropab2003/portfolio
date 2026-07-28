@@ -124,47 +124,49 @@
     padding:5px 10px;transform:rotate(-6deg);
     display:inline-flex;align-items:center;gap:5px;
     letter-spacing:.05em;
-    flex:0 0 auto;
-    max-width:100%;
-    overflow:hidden;text-overflow:ellipsis;
+    flex-shrink:0;
+    white-space:nowrap;
   }
   .stamp.open{color:var(--ok);}
   .stamp.progress{color:var(--warn);}
   .stamp .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
   @media (max-width:480px){
-    .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;}
+    .stamp{font-size:8px;padding:3px 7px;transform:rotate(-4deg);gap:3px;}
   }
   @media (max-width:360px){
-    .stamp{font-size:8.5px;padding:4px 7px;}
+    .stamp{font-size:7px;padding:3px 6px;gap:2px;}
   }
 
   /* ---------- View counter chip ----------
      Compact glassmorphic "views" pill: bold count, trending-up icon,
-     gradient glow ring. .stub-head-badges is now a FLAT flex container
-     with THREE direct children: the pill (.view-chip), the subtitle
-     group (.view-chip-sub: "Since HH:MM Today" + delta badge), and the
-     "OPEN TO WORK" stamp (.stamp) — no wrapper div anymore.
+     gradient glow ring. .stub-head-badges is a FLAT flex container with
+     THREE direct children: the pill (.view-chip), the subtitle group
+     (.view-chip-sub: "Since HH:MM Today" + delta badge), and the
+     "OPEN TO WORK" stamp (.stamp).
 
-     LAYOUT LOGIC: on desktop/larger tablets, all three sit on one row
-     (flex-wrap:nowrap). Below 640px (phones, small tablets in portrait),
-     the container switches to flex-wrap:wrap and the pill is forced to
-     flex-basis:100% — meaning it always takes its OWN row by itself.
-     That pushes .view-chip-sub and .stamp together onto the next line,
-     where justify-content:space-between spreads them to opposite ends
-     (subtitle on the left, "OPEN TO WORK" on the right) — side by side,
-     never stacked, at every screen size. */
+     FIX: previously .view-chip forced itself onto its own full-width
+     row below 640px, pushing the subtitle + stamp to a second line.
+     That's removed — flex-wrap:nowrap now applies at EVERY screen
+     size, matching the desktop layout, so the pill + "Since ... New
+     today" + stamp always sit side by side in one row, even on the
+     smallest phones. To make that fit in ~343px of usable width on an
+     iPhone SE, every piece shrinks its font-size/padding further at the
+     narrow breakpoints below than before. */
   .stub-head-badges{
     display:flex;align-items:center;
-    gap:10px 12px;
+    gap:8px;
     flex-wrap:nowrap;
+    width:100%;
+    min-width:0;
   }
   @media (max-width:640px){
-    .stub-head-badges{
-        width:100%;
-        flex-wrap:wrap;
-        justify-content:space-between;
-        row-gap:8px;
-    }
+    .stub-head-badges{gap:6px;}
+  }
+  @media (max-width:480px){
+    .stub-head-badges{gap:5px;}
+  }
+  @media (max-width:360px){
+    .stub-head-badges{gap:4px;}
   }
 
   .view-chip{
@@ -180,9 +182,6 @@
     cursor:pointer;
     flex-shrink:0; /* never shrinks below natural content size — prevents clipped digits */
     transition:transform .18s ease, box-shadow .18s ease;
-  }
-  @media (max-width:640px){
-    .view-chip{flex:1 1 100%;} /* forces the pill onto its own full-width row */
   }
 
   /* glowing gradient ring around the pill, echoing the teal->blue border in the reference image */
@@ -243,17 +242,18 @@
   }
 
   @media (max-width:640px){
-    .view-chip{padding:7px 14px;gap:6px;}
-    .view-chip-icon{width:14px;height:14px;}
-  }
-  @media (max-width:480px){
-    .view-chip{padding:6px 11px;gap:5px;}
+    .view-chip{padding:6px 12px;gap:5px;}
     .view-chip-icon{width:13px;height:13px;}
   }
-  @media (max-width:360px){
-    .view-chip{padding:5px 9px;gap:4px;}
+  @media (max-width:480px){
+    .view-chip{padding:5px 10px;gap:4px;}
+    .view-chip-icon{width:12px;height:12px;}
     .view-chip-count,.view-chip-label{font-size:12px;}
-    .view-chip-icon{width:11px;height:11px;}
+  }
+  @media (max-width:360px){
+    .view-chip{padding:4px 8px;gap:3px;}
+    .view-chip-count,.view-chip-label{font-size:11px;}
+    .view-chip-icon{width:10px;height:10px;}
   }
   @media (min-width:1600px){
     .view-chip{padding:9px 18px;}
@@ -262,16 +262,14 @@
   }
 
   /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
-     a direct sibling of .view-chip and .stamp now. On mobile it grows to
-     fill the left side of the second row, with the stamp pinned to the
-     right via the container's justify-content:space-between. */
+     stays in the same row as the pill and stamp at every screen size.
+     Allowed to shrink (not grow) so the row never breaks. */
   .view-chip-sub{
-    display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+    display:flex;align-items:center;gap:5px;
+    flex-shrink:1;
     min-width:0;
-    flex:0 1 auto;
-  }
-  @media (max-width:640px){
-    .view-chip-sub{flex:1 1 auto;}
+    white-space:nowrap;
+    overflow:hidden;
   }
 
   .view-chip-since{
@@ -279,6 +277,7 @@
     font-size:10px;
     color:var(--muted);
     white-space:nowrap;
+    overflow:hidden;text-overflow:ellipsis;
   }
 
   .view-chip-delta{
@@ -302,17 +301,17 @@
   }
 
   @media (max-width:640px){
-    .view-chip-sub{gap:5px;}
-    .view-chip-since{font-size:9.5px;}
-    .view-chip-delta{font-size:9.5px;padding:2px 7px;}
-  }
-  @media (max-width:480px){
-    .view-chip-since{font-size:9px;}
-    .view-chip-delta{font-size:9px;padding:2px 6px;}
-  }
-  @media (max-width:360px){
+    .view-chip-sub{gap:4px;}
     .view-chip-since{font-size:8.5px;}
     .view-chip-delta{font-size:8.5px;padding:2px 6px;}
+  }
+  @media (max-width:480px){
+    .view-chip-since{font-size:7.5px;}
+    .view-chip-delta{font-size:7.5px;padding:2px 5px;}
+  }
+  @media (max-width:360px){
+    .view-chip-since{font-size:7px;max-width:60px;}
+    .view-chip-delta{font-size:7px;padding:1px 5px;}
   }
   @media (min-width:1600px){
     .view-chip-since,.view-chip-delta{font-size:11px;}
