@@ -132,7 +132,7 @@
   .stamp.progress{color:var(--warn);}
   .stamp .dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
   @media (max-width:480px){
-    .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;margin-top:2px;}
+    .stamp{font-size:9px;padding:4px 8px;transform:rotate(-4deg);gap:4px;}
   }
   @media (max-width:360px){
     .stamp{font-size:8.5px;padding:4px 7px;}
@@ -140,35 +140,31 @@
 
   /* ---------- View counter chip ----------
      Compact glassmorphic "views" pill: bold count, trending-up icon,
-     gradient glow ring, plus an inline subtitle ("Since HH:MM Today" +
-     "% vs Yesterday"/"New today" delta) that always sits next to (or,
-     on very tight widths, wraps neatly below) the pill.
+     gradient glow ring. .stub-head-badges is now a FLAT flex container
+     with THREE direct children: the pill (.view-chip), the subtitle
+     group (.view-chip-sub: "Since HH:MM Today" + delta badge), and the
+     "OPEN TO WORK" stamp (.stamp) — no wrapper div anymore.
 
-     FIX: "Since HH:MM Today" was previously hidden entirely below 900px
-     via display:none — that's why it disappeared on tablet/mobile. It's
-     now ALWAYS visible at every screen size. Instead of hiding it, the
-     .view-chip-sub row is allowed to wrap onto its own line beneath the
-     pill when the row gets too narrow to fit everything side by side —
-     so nothing is ever cut or hidden, it just reflows. */
+     LAYOUT LOGIC: on desktop/larger tablets, all three sit on one row
+     (flex-wrap:nowrap). Below 640px (phones, small tablets in portrait),
+     the container switches to flex-wrap:wrap and the pill is forced to
+     flex-basis:100% — meaning it always takes its OWN row by itself.
+     That pushes .view-chip-sub and .stamp together onto the next line,
+     where justify-content:space-between spreads them to opposite ends
+     (subtitle on the left, "OPEN TO WORK" on the right) — side by side,
+     never stacked, at every screen size. */
   .stub-head-badges{
-    display:flex;align-items:center;gap:12px;
+    display:flex;align-items:center;
+    gap:10px 12px;
     flex-wrap:nowrap;
   }
   @media (max-width:640px){
-    .stub-head-badges{width:100%;justify-content:space-between;gap:10px;flex-wrap:wrap;}
-  }
-  @media (max-width:480px){
-    .stub-head-badges{gap:8px;}
-  }
-
-  .view-chip-wrap{
-    display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;
-    flex:0 1 auto; /* shrink only — never grows past its own content width */
-    min-width:0;
-    row-gap:6px;
-  }
-  @media (max-width:640px){
-    .view-chip-wrap{flex:1 1 100%;} /* takes the full row so the stamp wraps to its own line below */
+    .stub-head-badges{
+        width:100%;
+        flex-wrap:wrap;
+        justify-content:space-between;
+        row-gap:8px;
+    }
   }
 
   .view-chip{
@@ -184,6 +180,9 @@
     cursor:pointer;
     flex-shrink:0; /* never shrinks below natural content size — prevents clipped digits */
     transition:transform .18s ease, box-shadow .18s ease;
+  }
+  @media (max-width:640px){
+    .view-chip{flex:1 1 100%;} /* forces the pill onto its own full-width row */
   }
 
   /* glowing gradient ring around the pill, echoing the teal->blue border in the reference image */
@@ -263,11 +262,16 @@
   }
 
   /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" —
-     ALWAYS visible at every screen size now. Wraps as its own row when
-     there isn't room beside the pill, rather than being hidden. */
+     a direct sibling of .view-chip and .stamp now. On mobile it grows to
+     fill the left side of the second row, with the stamp pinned to the
+     right via the container's justify-content:space-between. */
   .view-chip-sub{
     display:flex;align-items:center;flex-wrap:wrap;gap:6px;
     min-width:0;
+    flex:0 1 auto;
+  }
+  @media (max-width:640px){
+    .view-chip-sub{flex:1 1 auto;}
   }
 
   .view-chip-since{
