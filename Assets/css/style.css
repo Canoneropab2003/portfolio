@@ -826,8 +826,19 @@
   }
 
   /* ========================================================
-     ADDED: SOCIAL ICONS HOVER ANIMATION & STYLING
+     SOCIAL ICONS ROW — now a separate row below .cta-row
      ======================================================== */
+  .social-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  @media (max-width:640px){
+    .social-row{justify-content:center;}
+  }
+
   .social-btn {
     display: inline-flex;
     align-items: center;
@@ -840,13 +851,28 @@
     color: var(--ink);
     transition: transform 0.2s cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     text-decoration: none;
-    margin-left: 4px; /* Slight spacing from the primary buttons */
+    flex-shrink: 0;
+  }
+  @media (max-width:440px){
+    .social-btn{width:40px;height:40px;}
+  }
+  @media (max-width:360px){
+    .social-btn{width:38px;height:38px;}
+  }
+  @media (min-width:1600px){
+    .social-btn{width:48px;height:48px;}
   }
 
   .social-btn svg {
     width: 20px;
     height: 20px;
     transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  @media (max-width:440px){
+    .social-btn svg{width:18px;height:18px;}
+  }
+  @media (min-width:1600px){
+    .social-btn svg{width:22px;height:22px;}
   }
 
   /* Hover state: background turns accent color, button lifts, and casts a shadow */
