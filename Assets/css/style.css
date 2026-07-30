@@ -35,6 +35,19 @@
   }
   *{box-sizing:border-box;}
 
+  /* SAFETY NET: prevents ANY element anywhere on the page from ever
+     creating a horizontal scrollbar.
+
+     IMPORTANT: this must live on <html> ONLY, not on <body> as well.
+     Setting overflow-x:hidden on BOTH html and body forces the UA to
+     auto-convert body's overflow-y to `auto` (you can't mix `hidden`
+     on one axis with `visible` on the other), which turns <body> into
+     its own independent scroll container. That breaks every
+     position:sticky element inside it (like .nav): sticky sticks to
+     the nearest scrollable ancestor, so it locks onto body's box
+     instead of tracking the real page scroll on <html>, and just
+     scrolls away instead of staying pinned. Keeping this on html only
+     avoids creating that second, competing scroll container. */
   html{
     overflow-x:hidden;
   }
@@ -66,6 +79,14 @@
   }
   @media (max-width:860px){ .app{grid-template-columns:1fr;} }
 
+  /* ---------- NAV ----------
+     Moved to nav.css — make sure it's linked in the HTML
+     AFTER this stylesheet, e.g.:
+     <link rel="stylesheet" href="style.css">
+     <link rel="stylesheet" href="nav.css">
+  */
+
+  /* ---------- STAGE ---------- */
   .stage{
     padding:44px 28px 90px;
     display:flex;justify-content:center;
@@ -92,6 +113,54 @@
   .ticket.active{display:block;animation:rise .38s cubic-bezier(.2,.7,.3,1) both;}
   @keyframes rise{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
 
+  /* ---------- STUB HEAD ----------
+     RIGHT-SIDE PLACEMENT: title ("TICKET #0001" / "Top") sits on the
+     LEFT, and the badges group (pill + stamp + subtitle) sits on the
+     RIGHT, side by side, at every screen size.
+
+     NOTCH ALIGNMENT: the die-cut "bite" notches are pseudo-elements of
+     .stub-head itself (position:relative), positioned with
+     `bottom:-20px` — i.e. exactly half their own 40px height below
+     stub-head's OWN bottom edge, which is precisely where the dashed
+     border-bottom sits. This means the notch is always perfectly
+     centered on the dashed line no matter how tall or short the header
+     ends up being — no fixed pixel guess. (Verified against a real
+     render: this vertical centering is correct as-is.)
+
+     Horizontally, the 20px-wide notch is anchored flush at
+     `left:0` / `right:0` — i.e. its flat (non-rounded) side sits
+     EXACTLY on stub-head's own left/right edge, which lines up with
+     the ticket's outer edge, with the rounded bulge curving inward
+     into the card. (Previously this used a negative value intended to
+     have the notch straddle the edge half-in/half-out — but that left
+     a visible gap of white card between the true edge and the visible
+     part of the notch, i.e. it still read as a disconnected floating
+     circle. Anchoring flush at 0 removes any ambiguity: the notch's
+     edge touches the card's edge with zero gap, guaranteed.) */
+  /* ---------- STUB HEAD ----------
+     RIGHT-SIDE PLACEMENT: title ("TICKET #0001" / "Top") sits on the
+     LEFT, and the badges group (pill + stamp + subtitle) sits on the
+     RIGHT, side by side, at every screen size.
+
+     NOTCH ALIGNMENT: the die-cut "bite" notches are pseudo-elements of
+     .stub-head itself (position:relative), positioned with
+     `bottom:-20px` — i.e. exactly half their own 40px height below
+     stub-head's OWN bottom edge, which is precisely where the dashed
+     border-bottom sits. This is verified correct: the notch stays
+     perfectly centered on the dashed line no matter how tall or short
+     the header ends up being.
+
+     Horizontally, `left`/`right` on an absolutely positioned
+     pseudo-element are measured from stub-head's PADDING edge, not
+     its outer/visual edge — and stub-head has 30px of left/right
+     padding (--stub-pad-x below). Left at `0` therefore lands the
+     notch 30px inside the card's true edge, which is exactly the
+     "detached floating circle" gap seen in testing. Offsetting by
+     `-1 * --stub-pad-x` cancels that padding out, so the notch's flat
+     side actually touches the card's visual edge with zero gap,
+     regardless of how much padding stub-head has. --stub-pad-x is
+     shared with the padding declaration below so the two can never
+     drift out of sync again. */
   .stub-head{
     --stub-pad-x:30px;
     display:flex;flex-direction:row;justify-content:space-between;align-items:flex-start;
@@ -106,26 +175,22 @@
   .stub-head .num{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:11.5px;}
   .stub-head h2{font-size:clamp(20px,3.6vw,28px);margin-top:5px;}
 
-  /* die-cut stub notches — half-circle "bite" pinned to the dashed line.
-     .stub-head has no left/right border, so for its absolutely positioned
-     pseudo-elements, left:0 / right:0 land exactly on stub-head's own
-     visual edge (which is the ticket's visual edge) with zero gap —
-     no padding cancellation needed. This is what keeps the notch flush
-     at every breakpoint, including narrow phones like iPhone SE. */
+  /* die-cut stub notches — subtle half-circle "bite" that always sits
+     centered on the dashed line, regardless of header height */
   .stub-head::before,.stub-head::after{
     content:"";position:absolute;
     width:20px;height:40px;
     background:var(--bg);
-    bottom:-20px;
+    bottom:-20px; /* half of the 40px height — centers it exactly on the border-bottom line */
     transition:background .25s ease;
     z-index:1;
   }
   .stub-head::before{
-    left:0;
+    left:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:0 20px 20px 0;
   }
   .stub-head::after{
-    right:0;
+    right:calc(-1 * var(--stub-pad-x)); /* cancels stub-head's own padding so this lands flush on the card's true edge */
     border-radius:20px 0 0 20px;
   }
 
@@ -153,6 +218,7 @@
     .stamp{font-size:8px;padding:5px 9px;gap:3px;}
   }
 
+  /* ---------- View counter chip ---------- */
   .stub-head-badges{
     display:flex;align-items:center;flex-wrap:wrap;
     justify-content:flex-end;
@@ -190,6 +256,7 @@
     transition:transform .18s ease, box-shadow .18s ease;
   }
 
+  /* glowing gradient ring around the pill, echoing the teal->blue border in the reference image */
   .view-chip::before{
     content:"";
     position:absolute;inset:-1.5px;
@@ -205,6 +272,7 @@
     opacity:.85;
   }
 
+  /* soft ambient glow behind the pill */
   .view-chip::after{
     content:"";
     position:absolute;inset:-8px;
@@ -265,6 +333,7 @@
     .view-chip-count,.view-chip-label{font-size:18px;}
   }
 
+  /* subtitle group: "Since HH:MM Today" + "% vs Yesterday"/"New today" */
   .view-chip-sub{
     display:flex;align-items:center;flex-wrap:wrap;
     justify-content:flex-end;
@@ -322,12 +391,14 @@
   .stub-body{padding:30px 34px 40px;}
   @media (max-width:640px){ .stub-body{padding:22px 20px 30px;} }
 
+  /* ---------- content bits ---------- */
   .hero-flex{display:flex;gap:40px;align-items:center;justify-content:space-between;flex-wrap:wrap;max-width:100%;}
   .hero-text{flex:1 1 340px;min-width:0;}
   .hero-photo-wrap{
     position:relative;flex:0 0 auto;cursor:pointer;
     width:clamp(140px,22vw,200px);height:clamp(140px,22vw,200px);
   }
+  /* slow-rotating accent ring behind the photo — a crisp spinner arc, no gradient haze */
   .hero-photo-wrap::before{
     content:"";position:absolute;inset:-8px;border-radius:50%;
     border:3px solid transparent;
@@ -343,7 +414,7 @@
     box-shadow:0 20px 40px rgba(18,33,61,.18);
     display:block;
     transition:transform .2s ease;
-    filter:none;
+    filter:none; /* image must stay sharp in every theme, including dark mode */
     image-rendering:auto;
   }
   .hero-photo-wrap:hover .hero-photo{transform:scale(1.045);}
@@ -431,6 +502,7 @@
   .t-item .role{color:var(--accent);font-size:13.5px;font-weight:600;margin-top:2px;}
   .t-item p{color:var(--muted);font-size:13.8px;margin-top:8px;max-width:540px;}
 
+  /* Certifications */
   .cert-year{margin-bottom:26px;}
   .cert-year:last-child{margin-bottom:0;}
   .cert-year h4{
@@ -477,6 +549,8 @@
     background:var(--surface);padding:3px 8px;border-radius:6px;border:1px solid var(--line);
   }
 
+  /* Project tag pills — shown as a row above the "View details" / "Visit project"
+     action, not overlaid on the thumbnail image */
   .proj-tags{
     display:flex;flex-wrap:wrap;gap:8px;
     margin-top:14px;
@@ -516,6 +590,7 @@
   }
   .proj-card.empty:hover{transform:none;box-shadow:none;}
 
+  /* Project modal */
   .modal-overlay{
     position:fixed;inset:0;background:rgba(10,15,25,.55);
     display:none;align-items:center;justify-content:center;
@@ -547,6 +622,7 @@
   .modal-content .badge{display:inline-block;margin-top:14px;font-size:11.5px;background:var(--ok-soft);color:var(--ok);padding:4px 9px;border-radius:7px;font-weight:600;}
   .modal-content .modal-link{margin-top:20px;}
 
+  /* Photo lightbox — large view of the profile photo */
   .photo-modal-box{
     background:transparent;box-shadow:none;max-width:420px;
     animation:softBounce .38s cubic-bezier(.2,.7,.3,1) both;
@@ -589,6 +665,7 @@
   .msg-form textarea{min-height:100px;resize:vertical;}
   .msg-form small{color:var(--muted);font-size:12px;}
 
+  /* ---------- Chatbot ---------- */
   #chat-fab{
     position:fixed;bottom:20px;right:20px;width:54px;height:54px;border-radius:50%;
     background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center;
@@ -622,6 +699,7 @@
   .chat-input input{flex:1;border:1px solid var(--line);border-radius:9px;padding:9px 10px;font-size:13.5px;background:var(--surface);color:var(--ink);}
   .chat-input button{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:0 14px;font-weight:600;cursor:pointer;}
 
+  /* ---------- MOTION ---------- */
   @keyframes fadeUp{
     from{opacity:0;transform:translateY(16px);}
     to{opacity:1;transform:translateY(0);}
@@ -640,6 +718,7 @@
     100%{opacity:1;transform:translateY(0) scale(1);}
   }
 
+  /* content within a ticket fades/rises in the moment the ticket becomes visible */
   .grid3 .card,
   .timeline .t-item,
   .cert-list .cert-row,
@@ -654,12 +733,21 @@
     animation:popIn .6s cubic-bezier(.2,.7,.3,1) both;
     animation-delay:.1s;
   }
+  /* gentle attention-holders on status indicators */
   .stamp.open .dot,
   .hero-photo-badge .dot,
   .chat-head .dot{
     animation:pulseDot 2.4s ease-in-out infinite;
   }
 
+  /* ---------- SKELETON REVEAL ---------- */
+  /* While the site sits behind the ticket preloader (html.is-loading is set
+     by loading.js), every card/row/tag/photo that fades or pops in above
+     shows an opaque shimmering placeholder instead of its real content.
+     The instant loading.js removes html.is-loading, every placeholder
+     fades out at once — so the page "develops" into its real content
+     together, instead of content that already finished its entrance
+     animation invisibly just appearing already-settled. */
   .grid3 .card::after,
   .timeline .t-item::after,
   .cert-list .cert-row::after,
@@ -706,6 +794,7 @@
     100%{ background-position:150% 0; }
   }
 
+  /* micro-interactions */
   .btn{will-change:transform;}
   .btn:active{transform:translateY(0) scale(.96);}
   .card,.proj-card:not(.empty),.cert-row{will-change:transform;}
@@ -736,6 +825,9 @@
     }
   }
 
+  /* ========================================================
+     SOCIAL ICONS ROW — now a separate row below .cta-row
+     ======================================================== */
   .social-row {
     display: flex;
     align-items: center;
@@ -783,6 +875,7 @@
     .social-btn svg{width:22px;height:22px;}
   }
 
+  /* Hover state: background turns accent color, button lifts, and casts a shadow */
   .social-btn:hover {
     background: var(--accent);
     color: #fff;
@@ -791,6 +884,7 @@
     box-shadow: 0 8px 18px rgba(47, 93, 224, 0.25);
   }
 
+  /* Inner SVG pop animation: scales up and slightly tilts on hover */
   .social-btn:hover svg {
     transform: scale(1.15) rotate(5deg);
   }
